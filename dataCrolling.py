@@ -17,8 +17,14 @@ browser.get(url)
 temp = browser.find_elements(By.CLASS_NAME, "tmp")
 #체감온도
 actualTemp = browser.find_elements(By.CLASS_NAME,'chill')
+#어제보다 몇도높은지 부분 스크래핑
+temp_diff = browser.find_elements(By.CSS_SELECTOR, '.wrap-1>.w-txt')
 #습도 바람 1시간강수량
-humidity = browser.find_element(By.CSS_SELECTOR, '.val')
+humidity = browser.find_element(By.CSS_SELECTOR, '.wrap-2.no-underline>li:nth-child(1)>.val')
+#바람
+wind = browser.find_element(By.CSS_SELECTOR, '.wrap-2.no-underline>li:nth-child(2)>.val')
+#1시간강수량
+rainfall = browser.find_element(By.CSS_SELECTOR, '.wrap-2.no-underline>li:nth-child(3)>.val')
 
 
 #무조건반복문으로 따와야지만 텍스트로 내보내주는것같음
@@ -31,13 +37,21 @@ if actualTemp:
   actualTemp = actualTemp[0].text
   actualTemp = actualTemp.replace("체감","").replace("(", "").replace(")", "")
   print("체감온도:",actualTemp)
+#어제보다몇도높은지부분
+if temp_diff:
+  print(temp_diff[0].text)
 #습도
-#humidity
 if humidity:
   humidity = humidity.text
   print("습도:", humidity)
-
-
+#바람
+if wind:
+  wind = wind.text
+  print("바람:", wind)
+#강수량
+if rainfall:
+  rainfall = rainfall.text
+  print("강수량:", rainfall)
 
 
 browser.quit()
