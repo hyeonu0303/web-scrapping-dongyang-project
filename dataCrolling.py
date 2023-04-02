@@ -33,7 +33,7 @@ ultraDust = browser.find_element(By.CSS_SELECTOR, 'span.air-lvv').get_attribute(
 #미세먼지
 dust =  browser.find_element(By.CSS_SELECTOR, 'span.air-lvv-wrap.air-lvv-2>span.air-lvv').get_attribute('textContent')
 
-#온도
+#출력
 print(f"선택지역:{area}")
 print(f"온도:{temp}")
 print(f"체감온도:{actualTemp}")
@@ -43,6 +43,7 @@ print(f"바람: {wind}")
 print(f"강수량: {rainfall}")
 print(f"초미세먼지:{ultraDust}㎍/m³")
 print(f"미세먼지:{dust}㎍/m³")
+
 browser.quit()
 
 """
