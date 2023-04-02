@@ -1,20 +1,21 @@
-import time
+"""
+사용모듈
+1.seleium
+
+"""
 #정적크롤링
-import requests
-from bs4 import BeautifulSoup
 
 #동적크롤링
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.edge.options import Options
 
-#url연결
-url = "https://www.weather.go.kr/w/index.do"
-#Edge브라우저 및 get요청
-browser = webdriver.Edge()
+options=Options()
+options.add_argument('--headless')
+url="https://www.weather.go.kr/w/index.do"
+#엣지브라우저 와 요청
+browser=webdriver.Edge(options=options)
 browser.get(url)
-
-#창 2초동안 켜두기
-time.sleep(2)
 
 #온도
 temp = browser.find_element(By.CLASS_NAME, "tmp").text
@@ -36,11 +37,8 @@ rainfall = items[2].find_element(By.CLASS_NAME, 'val').text
 print(f"온도:{temp}")
 print(f"체감온도:{actualTemp}")
 print(f"{temp_diff}")
-print(f"습도: {humidity}")
-print(f"바람: {wind}")
-print(f"강수량: {rainfall}")
+print(f"습도:{humidity}")
+print(f"바람:{wind}")
+print(f"강수량:{rainfall}")
 
 browser.quit()
-
-
-
