@@ -1,5 +1,5 @@
 import time
-#동적크롤링
+#동적크롤링(스크래핑)
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
@@ -9,12 +9,17 @@ url = "https://www.weather.go.kr/w/index.do"
 browser = webdriver.Edge()
 browser.get(url)
 
-#30초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨
-time.sleep(30)
+#20초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨(시간변경가능)
+time.sleep(15)
 #지역
 area = browser.find_element(By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
 #온도
 temp = browser.find_element(By.CLASS_NAME, "tmp").text
+#최저온도
+minTemp = browser.find_element(By.CSS_SELECTOR,'span.tmin').text
+
+#최고온도
+maxTemp = browser.find_element(By.CSS_SELECTOR,'span.tmax').text
 #체감온도
 actualTemp = browser.find_element(By.CLASS_NAME, 'chill').text.replace("체감", "").replace("(", "").replace(")", "")
 #어제보다 몇도높은지 부분 스크래핑
@@ -31,11 +36,13 @@ rainfall = items[2].find_element(By.CLASS_NAME, 'val').text
 #초미세먼지
 ultraDust = browser.find_element(By.CSS_SELECTOR, 'span.air-lvv').get_attribute('textContent')
 #미세먼지
-dust =  browser.find_element(By.CSS_SELECTOR, 'span.air-lvv-wrap.air-lvv-2>span.air-lvv').get_attribute('textContent')
+dust =  browser.find_element(By.CSS_SELECTOR, 'span.air-lvv-wrap.air-lvv-2 span.air-lvv').get_attribute('textContent')
 
 #출력
 print(f"선택지역:{area}")
 print(f"온도:{temp}")
+print(f"{maxTemp}")
+print(f"{minTemp}")
 print(f"체감온도:{actualTemp}")
 print(f"{temp_diff}")
 print(f"습도: {humidity}")
