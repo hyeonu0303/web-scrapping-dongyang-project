@@ -10,11 +10,22 @@ browser = webdriver.Edge()
 browser.get(url)
 
 #20초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨(시간변경가능)
-time.sleep(15)
+time.sleep(1)
 #지역
 area = browser.find_element(By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
 #온도
-temp = browser.find_element(By.CLASS_NAME, "tmp").text
+#temperature
+temp = browser.find_element(By.CSS_SELECTOR, "span.tmp").text
+temp = float(temp[:-1])
+# temp_element = browser.find_element(By.CSS_SELECTOR, "span.tmp")
+# temp_with_unit = temp_element.text
+# temp_only = float(temp_with_unit.split("<small>")[0].strip())
+# print(temp_only) # Output: 11.6
+
+
+
+
+
 #최저온도
 minTemp = browser.find_element(By.CSS_SELECTOR,'span.tmin').text
 

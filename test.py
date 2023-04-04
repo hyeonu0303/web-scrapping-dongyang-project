@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 #url연결
 url = "https://www.weather.go.kr/w/index.do"
 #Edge브라우저 및 get요청
-browser = webdriver.Edge()
+browser = webdriver.Chrome()
 browser.get(url)
 
 #20초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨(시간변경가능)
@@ -17,7 +17,7 @@ time.sleep(15)
 #지역
 area = browser.find_element(By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
 #온도
-temp = browser.find_element(By.CLASS_NAME, "tmp").text
+temp = browser.find_element(By.CSS_SELECTOR,"span.tmp").text
 #최저온도
 minTemp = browser.find_element(By.CSS_SELECTOR,'span.tmin').text
 
@@ -80,3 +80,5 @@ if __name__ == "__main__" :
 
     #프로그램을 이벤트루프로 진입시키는(프로그램을 작동시키는) 코드
     app.exec_()
+
+    
