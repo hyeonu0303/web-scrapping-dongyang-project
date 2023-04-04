@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="file">
+    <file>기쁜표정.png</file>
+    <file>놀란표정.png</file>
+    <file>슬픈표정.png</file>
+  </qresource>
+</RCC>

@@ -1,41 +1,82 @@
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5 import uic
+import time
+#동적크롤링(스크래핑)
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
-browser = webdriver.Chrome()
-browser.get('https://www.weather.go.kr/w/index.do')
+#url연결
+url = "https://www.weather.go.kr/w/index.do"
+#Edge브라우저 및 get요청
+browser = webdriver.Edge()
+browser.get(url)
 
-wait = WebDriverWait(browser, 10)
+#20초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨(시간변경가능)
+time.sleep(15)
+#지역
+area = browser.find_element(By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
+#온도
+temp = browser.find_element(By.CLASS_NAME, "tmp").text
+#최저온도
+minTemp = browser.find_element(By.CSS_SELECTOR,'span.tmin').text
 
-# 지역 검색 창 열기
-search_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.search-btn')))
-search_button.click()
+#최고온도
+maxTemp = browser.find_element(By.CSS_SELECTOR,'span.tmax').text
+#체감온도
+actualTemp = browser.find_element(By.CLASS_NAME, 'chill').text.replace("체감", "").replace("(", "").replace(")", "")
+#어제보다 몇도높은지 부분 스크래핑
+temp_diff = browser.find_element(By.CSS_SELECTOR, '.wrap-1>.w-txt').text
 
-# 시/도 선택
-sido_select = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#sido')))
-sido_select.click()
-sido_option = wait.until(EC.element_to_be_clickable((By.XPATH, '//option[@value="11"]')))
-sido_option.click()
+#wrap-2>li>val이 3개여서 items에담음
+items = browser.find_elements(By.CSS_SELECTOR, '.wrap-2.no-underline li')
+#습도
+humidity = items[0].find_element(By.CLASS_NAME, 'val').text
+#바람
+wind = items[1].find_element(By.CLASS_NAME, 'val').text
+#강수량
+rainfall = items[2].find_element(By.CLASS_NAME, 'val').text
+#초미세먼지
+ultraDust = browser.find_element(By.CSS_SELECTOR, 'span.air-lvv').get_attribute('textContent')
+#미세먼지
+dust =  browser.find_element(By.CSS_SELECTOR, 'span.air-lvv-wrap.air-lvv-2 span.air-lvv').get_attribute('textContent')
 
-# 시/군/구 선택
-sigungu_select = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#sigungu')))
-sigungu_select.click()
-sigungu_option = wait.until(EC.element_to_be_clickable((By.XPATH, '//option[@value="110"]')))
-sigungu_option.click()
+#출력
+print(f"선택지역:{area}")
+print(f"온도:{temp}")
+print(f"{maxTemp}")
+print(f"{minTemp}")
+print(f"체감온도:{actualTemp}")
+print(f"{temp_diff}")
+print(f"습도: {humidity}")
+print(f"바람: {wind}")
+print(f"강수량: {rainfall}")
+print(f"초미세먼지:{ultraDust}㎍/m³")
+print(f"미세먼지:{dust}㎍/m³")
 
-# 읍/면/동 선택
-dong_select = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#dong')))
-dong_select.click()
-dong_option = wait.until(EC.element_to_be_clickable((By.XPATH, '//option[@value="1114059000"]')))
-dong_option.click()
+browser.quit()
+#UI파일 연결
+#단, UI파일은 Python 코드 파일과 같은 디렉토리에 위치해야한다.
+form_class = uic.loadUiType("UIdesign.ui")[0]
 
-# 검색 버튼 클릭
-search_submit = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.btn-search')))
-search_submit.click()
+#화면을 띄우는데 사용되는 Class 선언
+class WindowClass(QMainWindow, form_class) :
+    def __init__(self) :
+        super().__init__()
+        self.setupUi(self)
 
-# 날씨 정보 텍스트 가져오기
-weather_info_element = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.now_weather1')))
-weather_info_text = weather_info_element.text
+        self.area1 = self.findChild(QLabel, "area1")
+        self.area1.setText(area)
 
-print(weather_info_text)
+if __name__ == "__main__" :
+    #QApplication : 프로그램을 실행시켜주는 클래스
+    app = QApplication(sys.argv) 
+
+    #WindowClass의 인스턴스 생성
+    myWindow = WindowClass() 
+
+    #프로그램 화면을 보여주는 코드
+    myWindow.show()
+
+    #프로그램을 이벤트루프로 진입시키는(프로그램을 작동시키는) 코드
+    app.exec_()
