@@ -14,18 +14,27 @@ url = "https://www.weather.go.kr/w/index.do"
 browser = webdriver.Chrome()
 browser.get(url)
 
+#'-'문자를 숫자0으로 반환하는함수
+def extract_number(string):
+    # 정규식 패턴으로 숫자 추출
+    numbers = re.findall(r'\d+', string)
+    if numbers:
+        # 추출된 숫자가 있다면 첫 번째 숫자 반환
+        return int(numbers[0])
+    else:
+        # 추출된 숫자가 없다면 0 반환
+        return 0
+
 # 20초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨(시간변경가능)
 time.sleep(5)
+
+
 # 지역
 area = browser.find_element(
     By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
 # 온도
-# temperature
 temp = browser.find_element(By.CSS_SELECTOR, "span.tmp").text
-# temp_element = browser.find_element(By.CSS_SELECTOR, "span.tmp")
-# temp_with_unit = temp_element.text
-# temp_only = float(temp_with_unit.split("<small>")[0].strip())
-# print(temp_only) # Output: 11.6
+
 
 
 # 최저온도
@@ -50,20 +59,11 @@ humidity = float(re.findall('\d+', humidity_str)[0])
 wind_str = items[1].find_element(By.CLASS_NAME, 'val').text
 wind = float(re.findall('\d+', wind_str)[0])
 
-def extract_number(string):
-    # 정규식 패턴으로 숫자 추출
-    numbers = re.findall(r'\d+', string)
-    if numbers:
-        # 추출된 숫자가 있다면 첫 번째 숫자 반환
-        return int(numbers[0])
-    else:
-        # 추출된 숫자가 없다면 0 반환
-        return 0
+
 
 # 강수량
 rainfall_str = items[2].find_element(By.CLASS_NAME, 'val').text
 rainfall = extract_number(rainfall_str)
-#rainfall = float(re.findall('\d+', rainfall_str)[0])
 
 # 초미세먼지
 ultraDust = browser.find_element(By.CSS_SELECTOR,
@@ -89,8 +89,6 @@ def fTemp():
         print("오늘은 날씨가 조금 쌀쌀해요. 따뜻하게 입고 다니세요.")
 
 # 현재 습도 정보에 따른 출력
-
-
 def fhumidity():
     if humidity >= 30 and humidity <= 60:
         print("습도가 적정합니다.")
@@ -102,8 +100,6 @@ def fhumidity():
         print("자료없음")
 
 # 현재 바람 정보에 따른 출력
-
-
 def fwind():
     if wind < 0.3:
         print("이정도면 바람이 안부네요!")
@@ -117,8 +113,6 @@ def fwind():
         print("바람이 강하니 외출을 자제해주세요!")
 
 # 현재 강수량 정보에 따른 출력
-
-
 def frainfall():
     if rainfall == 0 :
         print("오늘은 비가 안와요!")
@@ -134,8 +128,6 @@ def frainfall():
         print("자료없음")
 
 # 현재 초미세먼지 정보에 따른 출력
-
-
 def fUltra():
     if ultraDust >= 0:
         print("좋음")
@@ -149,7 +141,7 @@ def fUltra():
         print("자료없음")
 
 
-# 문자열 삽입
+""" # 문자열 삽입
 ful = "초미세먼지"
 if ultraDust >= 0:
     ful = "좋음"
@@ -160,11 +152,9 @@ elif ultraDust >= 36:
 elif ultraDust >= 76:
     ful = "매우 나쁨"
 else:
-    ful = "자료없음"
+    ful = "자료없음" """
 
 # 현재 미세먼지 정보에 따라 출력
-
-
 def fDust():
     if dust >= 0:
         print("좋음")
@@ -178,8 +168,8 @@ def fDust():
         print("자료없음")
 
 # 총평
+
 # 온도 강수량 습도 미세먼지
-#
 
 
 # 출력
