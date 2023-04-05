@@ -15,7 +15,7 @@ browser = webdriver.Chrome()
 browser.get(url)
 
 # 20초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨(시간변경가능)
-time.sleep(15)
+time.sleep(5)
 # 지역
 area = browser.find_element(
     By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
@@ -50,13 +50,25 @@ humidity = float(re.findall('\d+', humidity_str)[0])
 wind_str = items[1].find_element(By.CLASS_NAME, 'val').text
 wind = float(re.findall('\d+', wind_str)[0])
 
+def extract_number(string):
+    # 정규식 패턴으로 숫자 추출
+    numbers = re.findall(r'\d+', string)
+    if numbers:
+        # 추출된 숫자가 있다면 첫 번째 숫자 반환
+        return int(numbers[0])
+    else:
+        # 추출된 숫자가 없다면 0 반환
+        return 0
+
 # 강수량
 rainfall_str = items[2].find_element(By.CLASS_NAME, 'val').text
-rainfall = float(re.findall('\d+', rainfall_str)[0])
+rainfall = extract_number(rainfall_str)
+#rainfall = float(re.findall('\d+', rainfall_str)[0])
 
 # 초미세먼지
-ultraDust = int(browser.find_element(By.CSS_SELECTOR,
-                'span.air-lvv').get_attribute('textContent'))
+ultraDust = browser.find_element(By.CSS_SELECTOR,
+                'span.air-lvv').get_attribute('textContent')
+ultraDust = extract_number(ultraDust)
 # 미세먼지
 dust = int(browser.find_element(By.CSS_SELECTOR,
            "div.cmp-cur-weather.cmp-cur-weather-air > ul > li:nth-child(2) > strong > span.air-lvv-wrap.air-lvv-1 > span").get_attribute('textContent'))
@@ -108,7 +120,7 @@ def fwind():
 
 
 def frainfall():
-    if rainfall == 0:
+    if rainfall == 0 :
         print("오늘은 비가 안와요!")
     elif rainfall < 3.0:
         print("약한 비가 와요!")
@@ -118,6 +130,8 @@ def frainfall():
         print("강한 비가 내리니 외출을 자제하세요!")
     elif rainfall >= 30.0:
         print("매우 강한 비가 내리니 외출하지마세요!")
+    else :
+        print("자료없음")
 
 # 현재 초미세먼지 정보에 따른 출력
 
