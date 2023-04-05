@@ -1,15 +1,16 @@
 import time
+import re
 #동적크롤링(스크래핑)
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 #url연결
 url = "https://www.weather.go.kr/w/index.do"
 #Edge브라우저 및 get요청
-browser = webdriver.Chrome()
+browser = webdriver.Edge()
 browser.get(url)
 
 #20초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨(시간변경가능)
-time.sleep(10)
+time.sleep(3)
 #지역
 area = browser.find_element(By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
 #온도
@@ -34,11 +35,31 @@ humidity = items[0].find_element(By.CLASS_NAME, 'val').text
 #바람
 wind = items[1].find_element(By.CLASS_NAME, 'val').text
 #강수량
-rainfall = items[2].find_element(By.CLASS_NAME, 'val').text
+def extract_number(string):
+    # 정규식 패턴으로 숫자 추출
+    numbers = re.findall(r'\d+', string)
+    if numbers:
+        # 추출된 숫자가 있다면 첫 번째 숫자 반환
+        return int(numbers[0])
+    else:
+        # 추출된 숫자가 없다면 0 반환
+        return 0
+
+# 강수량
+rainfall_val = items[2].find_element(By.CLASS_NAME, 'val').text
+rainfall = extract_number(rainfall_val)
+#rainfall = float(re.findall('\d+', rainfall_str)[0])
+
+#만약 rainfall의 값이 -가 아니면 소수형으로 바꾸고
+#rainfall의 값이 -면 화창하네요출력
+
+
+
 #초미세먼지
 ultraDust = browser.find_element(By.CSS_SELECTOR, 'span.air-lvv').get_attribute('textContent')
 #미세먼지
-dust = browser.find_element(By.CSS_SELECTOR,"div.cmp-cur-weather.cmp-cur-weather-air > ul > li:nth-child(2) > strong > span.air-lvv-wrap.air-lvv-1 > span").get_attribute('textContent')
+dust = int(browser.find_element(By.CSS_SELECTOR,
+           "div.cmp-cur-weather.cmp-cur-weather-air > ul > li:nth-child(2) > strong > span.air-lvv-wrap.air-lvv-1 > span").get_attribute('textContent'))
 #get_attribute 특정 값이나 서식 지정 정보를 추출하기 위해 get_attribute('textContent')를 사용해야 할 수도 있습니다.
 
 #출력

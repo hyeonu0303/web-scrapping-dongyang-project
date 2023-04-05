@@ -11,22 +11,16 @@ import sys
 #url연결
 url = "https://www.weather.go.kr/w/index.do"
 #Edge브라우저 및 get요청
-browser = webdriver.Edge()
+browser = webdriver.Chrome()
 browser.get(url)
 
 #20초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨(시간변경가능)
-time.sleep(10)
+time.sleep(15)
 #지역
 area = browser.find_element(By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
 #온도
 #temperature
 temp = browser.find_element(By.CSS_SELECTOR, "span.tmp").text
-# temp_element = browser.find_element(By.CSS_SELECTOR, "span.tmp")
-# temp_with_unit = temp_element.text
-# temp_only = float(temp_with_unit.split("<small>")[0].strip())
-# print(temp_only) # Output: 11.6
-
-
 
 
 #최저온도
@@ -51,13 +45,12 @@ wind_str = items[1].find_element(By.CLASS_NAME, 'val').text
 wind = float(re.findall('\d+', wind_str)[0])
 
 #강수량
-rainfall_str = items[2].find_element(By.CLASS_NAME, 'val').text
-rainfall = float(re.findall('\d+', rainfall_str)[0])
+rainfall = items[2].find_element(By.CLASS_NAME, 'val').text
 
 #초미세먼지
 ultraDust = int(browser.find_element(By.CSS_SELECTOR, 'span.air-lvv').get_attribute('textContent'))
 #미세먼지
-dust = int(browser.find_element(By.CSS_SELECTOR,"div.cmp-cur-weather.cmp-cur-weather-air > ul > li:nth-child(2) > strong > span.air-lvv-wrap.air-lvv-1 > span").get_attribute('textContent'))
+dust = int(browser.find_element(By.CSS_SELECTOR,"div.cmp-cur-weather.cmp-cur-weather-air > ul > li:nth-child(2) > strong > span.air-lvv-wrap.air-lvv-1 > span.air-lvv").get_attribute('textContent'))
 
 # 온도를 실수형으로 전환
 temp = float(temp[:-1])
@@ -75,7 +68,7 @@ def fTemp() :
     print("오늘은 날씨가 조금 쌀쌀해요. 따뜻하게 입고 다니세요.")
     
 # 현재 습도 정보에 따른 출력
-def fHumidity() :
+def fHumidity(humidity) :
   if humidity >= 30 and humidity <= 60:
     print("습도가 적정합니다.")
   elif humidity < 30:
@@ -100,7 +93,9 @@ def fWind() :
     
 # 현재 강수량 정보에 따른 출력
 def fRainfall() :
-    if rainfall == 0 :
+    if rainfall == 0.0 :
+      print("오늘은 비가 안와요!")
+    elif rainfall == "- ":
       print("오늘은 비가 안와요!")
     elif rainfall < 3.0:
       print("약한 비가 와요!")
@@ -110,6 +105,7 @@ def fRainfall() :
       print("강한 비가 내리니 외출을 자제하세요!")
     elif rainfall >= 30.0 :
       print("매우 강한 비가 내리니 외출하지마세요!")
+    
       
 # 현재 초미세먼지 정보에 따른 출력
 def fUltra() : 
@@ -125,17 +121,17 @@ def fUltra() :
     print("자료없음")
 
 # 문자열 삽입
-ful = "초미세먼지"
-if ultraDust >= 0 :
-  ful = "좋음"
-elif ultraDust >=16 :
-  ful = "보통"
-elif ultraDust >= 36 :
-  ful = "나쁨"
-elif ultraDust >= 76 :
-  ful = "매우 나쁨"
-else :
-  ful = "자료없음"
+# ful = "초미세먼지"
+# if ultraDust >= 0 :
+#   ful = "좋음"
+# elif ultraDust >=16 :
+#   ful = "보통"
+# elif ultraDust >= 36 :
+#   ful = "나쁨"
+# elif ultraDust >= 76 :
+#   ful = "매우 나쁨"
+# else :
+#   ful = "자료없음"
   
 # 현재 미세먼지 정보에 따라 출력
 def fDust() :
@@ -166,12 +162,11 @@ fHumidity()
 print(f"바람: {wind} m/s", end=' / ')
 fWind()
 print(f"강수량: {rainfall} mm", end=' / ')
-fRainfall()
 print(f"초미세먼지:{ultraDust}㎍/m³", end=' / ')
 fUltra()
 print(f"미세먼지:{dust}㎍/m³", end=' / ')
 fDust()
-print(ful)
+
 
 browser.quit()
 #UI파일 연결
@@ -184,11 +179,36 @@ class WindowClass(QMainWindow, form_class) :
         super().__init__()
         self.setupUi(self)
 
-        self.area_title = self.findChild(QLabel, "area_title")
-        self.area_title.setText(area)
+        self.area_data = self.findChild(QLabel, "area_data")
+        self.area_data.setText(area)
 
-        self.label_hello = self.findChild(QLabel, "label_hello")
-        self.label_hello.setText(ful)
+        # self.label_hello = self.findChild(QLabel, "label_hello")
+        # self.label_hello.setText(ful)
+        
+        #습도
+        """ self.fhumidity_comm = self.findChild(QLabel, "fhumidity_comm")
+        self.fhumidity_comm.setText(fHumidity(humidity)) """
+        #습도멘트
+
+        #바람
+
+        #바람멘트
+
+        #강수량
+
+        #강수량멘트
+
+        #미세먼지데이터
+
+        #미세먼지멘트
+
+        #초미세먼지데이터
+
+        #미세먼지멘트
+
+        #총데이터
+
+
 
 
 if __name__ == "__main__" :

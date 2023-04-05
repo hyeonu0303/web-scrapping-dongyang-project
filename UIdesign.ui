@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1500</width>
-    <height>1000</height>
+    <width>977</width>
+    <height>539</height>
    </rect>
   </property>
   <property name="palette">
@@ -108,6 +108,7 @@
     </property>
     <property name="font">
      <font>
+      <family>NanumBarunGothic</family>
       <pointsize>15</pointsize>
      </font>
     </property>
@@ -126,6 +127,7 @@
     </property>
     <property name="font">
      <font>
+      <family>NanumBarunGothic</family>
       <pointsize>15</pointsize>
      </font>
     </property>
@@ -144,6 +146,7 @@
     </property>
     <property name="font">
      <font>
+      <family>NanumBarunGothic</family>
       <pointsize>15</pointsize>
      </font>
     </property>
@@ -162,6 +165,7 @@
     </property>
     <property name="font">
      <font>
+      <family>NanumBarunGothic</family>
       <pointsize>15</pointsize>
      </font>
     </property>
@@ -172,10 +176,10 @@
    <widget class="QLabel" name="temp_diff_data">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>170</y>
-      <width>121</width>
-      <height>21</height>
+      <x>150</x>
+      <y>150</y>
+      <width>391</width>
+      <height>60</height>
      </rect>
     </property>
     <property name="text">
@@ -185,9 +189,9 @@
    <widget class="QLabel" name="fhumidity_title">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>250</y>
-      <width>350</width>
+      <x>120</x>
+      <y>240</y>
+      <width>150</width>
       <height>50</height>
      </rect>
     </property>
@@ -198,9 +202,9 @@
    <widget class="QLabel" name="udust_title">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>560</y>
-      <width>350</width>
+      <x>540</x>
+      <y>510</y>
+      <width>150</width>
       <height>50</height>
      </rect>
     </property>
@@ -211,9 +215,9 @@
    <widget class="QLabel" name="wind_title">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>250</y>
-      <width>350</width>
+      <x>540</x>
+      <y>240</y>
+      <width>150</width>
       <height>50</height>
      </rect>
     </property>
@@ -224,9 +228,9 @@
    <widget class="QLabel" name="rain_title">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>250</y>
-      <width>350</width>
+      <x>870</x>
+      <y>240</y>
+      <width>150</width>
       <height>50</height>
      </rect>
     </property>
@@ -237,9 +241,9 @@
    <widget class="QLabel" name="dust_title">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>570</y>
-      <width>350</width>
+      <x>120</x>
+      <y>510</y>
+      <width>150</width>
       <height>50</height>
      </rect>
     </property>
@@ -290,9 +294,9 @@
    <widget class="QLabel" name="dress_title">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>560</y>
-      <width>350</width>
+      <x>810</x>
+      <y>510</y>
+      <width>250</width>
       <height>50</height>
      </rect>
     </property>
@@ -303,10 +307,10 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>310</y>
-      <width>131</width>
-      <height>101</height>
+      <x>150</x>
+      <y>300</y>
+      <width>120</width>
+      <height>110</height>
      </rect>
     </property>
     <property name="text">
@@ -316,10 +320,10 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>310</y>
-      <width>131</width>
-      <height>101</height>
+      <x>540</x>
+      <y>300</y>
+      <width>151</width>
+      <height>110</height>
      </rect>
     </property>
     <property name="text">
@@ -329,9 +333,9 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>920</x>
-      <y>330</y>
-      <width>121</width>
+      <x>870</x>
+      <y>300</y>
+      <width>150</width>
       <height>101</height>
      </rect>
     </property>
@@ -342,10 +346,10 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>600</y>
-      <width>121</width>
-      <height>111</height>
+      <x>120</x>
+      <y>570</y>
+      <width>120</width>
+      <height>110</height>
      </rect>
     </property>
     <property name="text">
@@ -356,7 +360,7 @@
     <property name="geometry">
      <rect>
       <x>540</x>
-      <y>630</y>
+      <y>570</y>
       <width>131</width>
       <height>101</height>
      </rect>
@@ -381,10 +385,10 @@
    <widget class="QLabel" name="fhumidity_comm">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>460</y>
-      <width>56</width>
-      <height>12</height>
+      <x>120</x>
+      <y>480</y>
+      <width>210</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -394,9 +398,9 @@
    <widget class="QLabel" name="wind_comm">
     <property name="geometry">
      <rect>
-      <x>640</x>
+      <x>540</x>
       <y>480</y>
-      <width>56</width>
+      <width>210</width>
       <height>12</height>
      </rect>
     </property>
@@ -407,9 +411,9 @@
    <widget class="QLabel" name="rain_comm">
     <property name="geometry">
      <rect>
-      <x>950</x>
-      <y>490</y>
-      <width>56</width>
+      <x>840</x>
+      <y>480</y>
+      <width>210</width>
       <height>12</height>
      </rect>
     </property>
@@ -420,10 +424,10 @@
    <widget class="QLabel" name="fhumidity_data">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>440</y>
-      <width>56</width>
-      <height>12</height>
+      <x>120</x>
+      <y>420</y>
+      <width>121</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -433,9 +437,9 @@
    <widget class="QLabel" name="wind_data">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>450</y>
-      <width>71</width>
+      <x>540</x>
+      <y>420</y>
+      <width>121</width>
       <height>16</height>
      </rect>
     </property>
@@ -446,8 +450,8 @@
    <widget class="QLabel" name="rain_data">
     <property name="geometry">
      <rect>
-      <x>950</x>
-      <y>450</y>
+      <x>870</x>
+      <y>420</y>
       <width>56</width>
       <height>12</height>
      </rect>
@@ -459,8 +463,8 @@
    <widget class="QLabel" name="dust_data">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>710</y>
+      <x>120</x>
+      <y>690</y>
       <width>101</width>
       <height>16</height>
      </rect>
@@ -472,9 +476,9 @@
    <widget class="QLabel" name="udust_data">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>760</y>
-      <width>101</width>
+      <x>540</x>
+      <y>690</y>
+      <width>91</width>
       <height>16</height>
      </rect>
     </property>
@@ -485,8 +489,8 @@
    <widget class="QLabel" name="dust_comm">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>750</y>
+      <x>120</x>
+      <y>720</y>
       <width>56</width>
       <height>12</height>
      </rect>
@@ -498,10 +502,10 @@
    <widget class="QLabel" name="udust_comm">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>790</y>
-      <width>56</width>
-      <height>12</height>
+      <x>540</x>
+      <y>720</y>
+      <width>151</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
@@ -513,25 +517,12 @@
      <rect>
       <x>280</x>
       <y>90</y>
-      <width>221</width>
+      <width>331</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
      <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_hello">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>840</y>
-      <width>171</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>초미세먼지</string>
     </property>
    </widget>
   </widget>
