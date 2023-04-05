@@ -4,6 +4,9 @@ import re
 #동적크롤링(스크래핑)
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel
+from PyQt5 import uic
+import sys
 
 #url연결
 url = "https://www.weather.go.kr/w/index.do"
@@ -120,6 +123,19 @@ def fUltra() :
     print("매우 나쁨")
   else :
     print("자료없음")
+
+# 문자열 삽입
+ful = "초미세먼지"
+if ultraDust >= 0 :
+  ful = "좋음"
+elif ultraDust >=16 :
+  ful = "보통"
+elif ultraDust >= 36 :
+  ful = "나쁨"
+elif ultraDust >= 76 :
+  ful = "매우 나쁨"
+else :
+  ful = "자료없음"
   
 # 현재 미세먼지 정보에 따라 출력
 def fDust() :
@@ -155,5 +171,35 @@ print(f"초미세먼지:{ultraDust}㎍/m³", end=' / ')
 fUltra()
 print(f"미세먼지:{dust}㎍/m³", end=' / ')
 fDust()
+print(ful)
 
 browser.quit()
+#UI파일 연결
+#단, UI파일은 Python 코드 파일과 같은 디렉토리에 위치해야한다.
+form_class = uic.loadUiType("UIdesign.ui")[0]
+
+#화면을 띄우는데 사용되는 Class 선언
+class WindowClass(QMainWindow, form_class) :
+    def __init__(self) :
+        super().__init__()
+        self.setupUi(self)
+
+        self.area_title = self.findChild(QLabel, "area_title")
+        self.area_title.setText(area)
+
+        self.label_hello = self.findChild(QLabel, "label_hello")
+        self.label_hello.setText(ful)
+
+
+if __name__ == "__main__" :
+    #QApplication : 프로그램을 실행시켜주는 클래스
+    app = QApplication(sys.argv) 
+
+    #WindowClass의 인스턴스 생성
+    myWindow = WindowClass() 
+
+    #프로그램 화면을 보여주는 코드
+    myWindow.show()
+
+    #프로그램을 이벤트루프로 진입시키는(프로그램을 작동시키는) 코드
+    app.exec_()
