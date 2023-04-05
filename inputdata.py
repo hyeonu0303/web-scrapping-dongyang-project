@@ -72,7 +72,7 @@ def fTemp() :
     print("오늘은 날씨가 조금 쌀쌀해요. 따뜻하게 입고 다니세요.")
     
 # 현재 습도 정보에 따른 출력
-def fhumidity() :
+def fHumidity() :
   if humidity >= 30 and humidity <= 60:
     print("습도가 적정합니다.")
   elif humidity < 30:
@@ -83,7 +83,7 @@ def fhumidity() :
     print("자료없음")
 
 # 현재 바람 정보에 따른 출력
-def fwind() :
+def fWind() :
   if wind < 0.3 :
     print("이정도면 바람이 안부네요!")
   elif wind >= 0.3 and wind <= 1.5 :
@@ -96,7 +96,7 @@ def fwind() :
     print("바람이 강하니 외출을 자제해주세요!")
     
 # 현재 강수량 정보에 따른 출력
-def frainfall() :
+def fRainfall() :
     if rainfall == 0 :
       print("오늘은 비가 안와요!")
     elif rainfall < 3.0:
@@ -136,8 +136,7 @@ def fDust() :
 
 #총평
 #온도 강수량 습도 미세먼지
-#
-    
+
 #출력
 print(f"선택지역:{area}")
 print(f"온도:{temp}", end=' / ')
@@ -147,11 +146,11 @@ print(f"{minTemp}")
 print(f"체감온도:{actualTemp}")
 print(f"{temp_diff}")
 print(f"습도: {humidity} %", end=' / ')
-fhumidity()
+fHumidity()
 print(f"바람: {wind} m/s", end=' / ')
-fwind()
+fWind()
 print(f"강수량: {rainfall} mm", end=' / ')
-frainfall()
+fRainfall()
 print(f"초미세먼지:{ultraDust}㎍/m³", end=' / ')
 fUltra()
 print(f"미세먼지:{dust}㎍/m³", end=' / ')
