@@ -12,7 +12,7 @@ browser = webdriver.Edge()
 browser.get(url)
 
 #20초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨(시간변경가능)
-time.sleep(1)
+time.sleep(10)
 #지역
 area = browser.find_element(By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
 #온도
@@ -54,7 +54,7 @@ rainfall = float(re.findall('\d+', rainfall_str)[0])
 #초미세먼지
 ultraDust = int(browser.find_element(By.CSS_SELECTOR, 'span.air-lvv').get_attribute('textContent'))
 #미세먼지
-dust =  float(browser.find_element(By.CSS_SELECTOR, 'span.air-lvv-wrap.air-lvv-2 span.air-lvv').get_attribute('textContent'))
+dust = int(browser.find_element(By.CSS_SELECTOR,"div.cmp-cur-weather.cmp-cur-weather-air > ul > li:nth-child(2) > strong > span.air-lvv-wrap.air-lvv-1 > span").get_attribute('textContent'))
 
 # 온도를 실수형으로 전환
 temp = float(temp[:-1])
@@ -133,6 +133,10 @@ def fDust() :
     print("매우나쁨")
   else :
     print("자료없음")
+
+#총평
+#온도 강수량 습도 미세먼지
+#
     
 #출력
 print(f"선택지역:{area}")
@@ -150,30 +154,7 @@ print(f"강수량: {rainfall} mm", end=' / ')
 frainfall()
 print(f"초미세먼지:{ultraDust}㎍/m³", end=' / ')
 fUltra()
-print(f"미세먼지:{dust}ppm³", end=' / ')
+print(f"미세먼지:{dust}㎍/m³", end=' / ')
 fDust()
 
 browser.quit()
-
-"""
-<ul>
-  <li>
-  <strong class="air-level val">
-    <span class="air-lvv-wrap air-lvv-2">
-      <small class="air-lvv">31</span>
-      <small class="unit">m3</small>
-  </strong>
-  </li>
-<ul/>
-"""
-
-"""
-<div class="serch-area accordionsecond-wrap acco-on">
-<a href="#" class="serch-area-btn accordionsecond-tit on" data-role="bookmark-selected" title="펼쳐짐" data-wide-code="4600000000" data-wide-name="전남" data-city-code="4682000000" data-city-name="해남군" data-dong-code="4682034000" data-dong-name="송지면" data-x="53" data-y="55" data-lat="34.2972777904718" data-lon="126.525759259436">전남 해남군 송지면</a>
-  <div class="accordionsecond-con serch-con" style="display: block;">
-      <div>
-        <ul data-role="bookmark-holder"></ul>
-      </div>
-  </div>
-</div>
-"""

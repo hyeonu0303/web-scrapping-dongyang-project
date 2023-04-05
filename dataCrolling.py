@@ -56,25 +56,6 @@ print(f"미세먼지:{dust}㎍/m³")
 
 browser.quit()
 
-"""
-<ul>
-  <li>
-  <strong class="air-level val">
-    <span class="air-lvv-wrap air-lvv-2">
-      <small class="air-lvv">31</span>
-      <small class="unit">m3</small>
-  </strong>
-  </li>
-<ul/>
-"""
 
-"""
-<div class="serch-area accordionsecond-wrap acco-on">
-<a href="#" class="serch-area-btn accordionsecond-tit on" data-role="bookmark-selected" title="펼쳐짐" data-wide-code="4600000000" data-wide-name="전남" data-city-code="4682000000" data-city-name="해남군" data-dong-code="4682034000" data-dong-name="송지면" data-x="53" data-y="55" data-lat="34.2972777904718" data-lon="126.525759259436">전남 해남군 송지면</a>
-  <div class="accordionsecond-con serch-con" style="display: block;">
-      <div>
-        <ul data-role="bookmark-holder"></ul>
-      </div>
-  </div>
-</div>
-"""
+
+
