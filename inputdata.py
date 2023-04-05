@@ -185,8 +185,8 @@ class WindowClass(QMainWindow, form_class) :
         super().__init__()
         self.setupUi(self)
 
-        self.area1 = self.findChild(QLabel, "area1")
-        self.area1.setText(area)
+        self.area_title = self.findChild(QLabel, "area_title")
+        self.area_title.setText(area)
 
         self.label_hello = self.findChild(QLabel, "label_hello")
         self.label_hello.setText(ful)
