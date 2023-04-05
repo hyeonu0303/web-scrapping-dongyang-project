@@ -2,29 +2,20 @@ import time
 #동적크롤링(스크래핑)
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
 #url연결
 url = "https://www.weather.go.kr/w/index.do"
 #Edge브라우저 및 get요청
-browser = webdriver.Edge()
+browser = webdriver.Chrome()
 browser.get(url)
 
 #20초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨(시간변경가능)
-time.sleep(1)
+time.sleep(10)
 #지역
 area = browser.find_element(By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
 #온도
 #temperature
 temp = browser.find_element(By.CSS_SELECTOR, "span.tmp").text
 temp = float(temp[:-1])
-# temp_element = browser.find_element(By.CSS_SELECTOR, "span.tmp")
-# temp_with_unit = temp_element.text
-# temp_only = float(temp_with_unit.split("<small>")[0].strip())
-# print(temp_only) # Output: 11.6
-
-
-
-
 
 #최저온도
 minTemp = browser.find_element(By.CSS_SELECTOR,'span.tmin').text
@@ -47,7 +38,8 @@ rainfall = items[2].find_element(By.CLASS_NAME, 'val').text
 #초미세먼지
 ultraDust = browser.find_element(By.CSS_SELECTOR, 'span.air-lvv').get_attribute('textContent')
 #미세먼지
-dust =  browser.find_element(By.CSS_SELECTOR, 'span.air-lvv-wrap.air-lvv-2 span.air-lvv').get_attribute('textContent')
+dust = browser.find_element(By.CSS_SELECTOR,"div.cmp-cur-weather.cmp-cur-weather-air > ul > li:nth-child(2) > strong > span.air-lvv-wrap.air-lvv-1 > span").get_attribute('textContent')
+#get_attribute 특정 값이나 서식 지정 정보를 추출하기 위해 get_attribute('textContent')를 사용해야 할 수도 있습니다.
 
 #출력
 print(f"선택지역:{area}")

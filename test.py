@@ -39,7 +39,7 @@ rainfall = items[2].find_element(By.CLASS_NAME, 'val').text
 #초미세먼지
 ultraDust = browser.find_element(By.CSS_SELECTOR, 'span.air-lvv').get_attribute('textContent')
 #미세먼지
-dust =  browser.find_element(By.CSS_SELECTOR, 'span.air-lvv-wrap.air-lvv-2 span.air-lvv').get_attribute('textContent')
+dust = browser.find_element(By.CSS_SELECTOR,"div.cmp-cur-weather.cmp-cur-weather-air > ul > li:nth-child(2) > strong > span.air-lvv-wrap.air-lvv-1 > span").get_attribute('textContent')
 
 #출력
 print(f"선택지역:{area}")
