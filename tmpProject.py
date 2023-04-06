@@ -70,7 +70,7 @@ ultraDust = int(browser.find_element(By.CSS_SELECTOR,
 # ultraDust = extract_number(ultraDust)
 # 미세먼지
 dust = int(browser.find_element(By.CSS_SELECTOR,
-          "div.cmp-cur-weather.cmp-cur-weather-air > ul > li:nth-child(2) > strong > span.air-lvv-wrap.air-lvv-1 > span").get_attribute('textContent'))
+          "div.cmp-cur-weather.cmp-cur-weather-air > ul > li:nth-child(2) > strong > span > span.air-lvv").get_attribute('textContent'))
 
 
 
@@ -152,6 +152,24 @@ def fDust(dust):
         return "자료없음"
 
 # 총평
+def fDress(temp) :
+    if temp >= 28 :
+        return "더위가 매우 심하니 민소매, 반팔, 반바지, 린넨 옷을 입는 것을 추천합니다. 외출활동을 자제하는 것을 권장해요." 
+    elif temp >= 23 :
+        return "더운 여름 날씨예요. 반팔, 얇은 셔츠, 반바지, 면바지를 입는 것을 추천해요. 주변 공원에서 피크닉을 즐기는 것은 어떨까요?"
+    elif temp >= 20 :
+        return "블라우스, 긴팔 티, 면바지, 슬랙스를 입는 것을 추천해요. 조금 더운 여름 날씨예요. 낮 시간에도 그리 덥지 않으니 주변 공원에 피크닉을 다녀오는 것은 어떨까요?"
+    elif temp >= 17 :
+        return "따듯한 날씨에는 얇은 가디건이나 니트, 맨투맨, 후드, 긴 바지를 입는 것을 추천해요. 다양한 스타일로 즐길 수 있는 날씨예요."
+    elif temp >= 12 :
+        return "일교차가 커지는 시기예요. 자켓, 가디건, 청자켓, 니트, 청바지를 입는 것을 추천해요. 따듯한 겉옷을 챙겨 다니는 것은 어떨까요?"
+    elif temp >= 9 :
+        return "트렌치코트, 야상, 점퍼, 기모 바지를 입는 것을 추천해요. 오늘같은 날씨가 아니면 입기 힘든 트렌치코트를 입어보는건 어떨까요?"
+    elif temp >= 5 :
+        return "추위가 시작되거나 끝나가는 시기예요. 울 코트, 히트텍, 가죽 옷, 기모 옷을 입는 것을 추천해요. 이런 날씨엔 감기에 걸리기 쉬우니 따듯하게 입고 가는건 어떨까요?"
+    else:
+        return "한겨울이라 추우니 패딩, 두꺼운 코트, 누빔 옷, 기모, 목도리를 입는 것을 추천해요. 체온 유지를 위해 잠깐 패션을 포기하는 건 어떨까요?"
+    
 
 # 온도 강수량 습도 미세먼지
 
