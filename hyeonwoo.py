@@ -15,7 +15,7 @@ browser = webdriver.Chrome()
 browser.get(url)
 
 #'-'문자를 숫자0으로 반환하는함수
-def extract_number(string):
+def float_extract_number(string):
     # 정규식 패턴으로 숫자 추출
     numbers = re.findall(r'\d+', string)
     if numbers:
@@ -25,6 +25,15 @@ def extract_number(string):
         # 추출된 숫자가 없다면 0 반환
         return 0
 
+def int_extract_number(string):
+    # 정규식 패턴으로 숫자 추출
+    numbers = re.findall(r'\d+', string)
+    if numbers:
+        # 추출된 숫자가 있다면 첫 번째 숫자 반환
+        return int(numbers[0])
+    else:
+        # 추출된 숫자가 없다면 0 반환
+        return 0
 # 20초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨(시간변경가능)
 time.sleep(5)
 
@@ -62,17 +71,16 @@ wind = float(re.findall('\d+', wind_str)[0])
 # 강수량
 rainfall_str = items[2].find_element(By.CLASS_NAME, 'val').text
 # rainfall = float(re.findall('\d+', rainfall_str)[0])
-rainfall = extract_number(rainfall_str)
+rainfall = float_extract_number(rainfall_str)
 
 # 초미세먼지
 ultraDust = int(browser.find_element(By.CSS_SELECTOR,
                 'span.air-lvv').get_attribute('textContent'))
 # ultraDust = extract_number(ultraDust)
 # 미세먼지
-dust = int(browser.find_element(By.CSS_SELECTOR,
-        "div.cmp-cur-weather.cmp-cur-weather-air > ul > li:nth-child(2) > strong > span > span.air-lvv").get_attribute('textContent'))
-
-
+dust_str = browser.find_element(By.CSS_SELECTOR,
+        'ul.wrap-2.air-wrap.no-underline > li:nth-child(2) > strong.air-level.val > span > span.air-lvv').get_attribute('textContent')
+dust = int_extract_number(dust_str)
 
 
 # 현재 온도 정보에 따른 출력
