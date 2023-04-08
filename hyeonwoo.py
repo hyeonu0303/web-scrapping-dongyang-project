@@ -1,11 +1,12 @@
-import time
 # 정규식(regular expression) 쉽게 문자열에서 패턴에 해당하는 부분을 추출
 import re
 # 동적크롤링(스크래핑)
+import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel
 from PyQt5 import uic
+from PyQt5.QtGui import QPixmap
 import sys
 
 # url연결
@@ -43,12 +44,13 @@ area = browser.find_element(
     By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
 # 온도
 temp = browser.find_element(By.CSS_SELECTOR, "span.tmp").text
-# 온도를 실수형으로 전환
-
+temp = temp[:-1]
 
 # 최저온도
 minTemp = browser.find_element(By.CSS_SELECTOR, 'span.tmin').text
-
+def fMinTemp(minTemp):
+    if minTemp == "-":
+        return "자료가없습니다."
 # 최고온도
 maxTemp = browser.find_element(By.CSS_SELECTOR, 'span.tmax').text
 # 체감온도
@@ -62,7 +64,7 @@ items = browser.find_elements(By.CSS_SELECTOR, '.wrap-2.no-underline li')
 
 # 습도
 humidity_str = items[0].find_element(By.CLASS_NAME, 'val').text
-humidity = float(re.findall('\d+', humidity_str)[0])
+humidity = int(re.findall('\d+', humidity_str)[0])
 
 # 바람
 wind_str = items[1].find_element(By.CLASS_NAME, 'val').text
@@ -83,99 +85,102 @@ dust_str = browser.find_element(By.CSS_SELECTOR,
 dust = int_extract_number(dust_str)
 
 
-# 현재 온도 정보에 따른 출력
-""" def fTemp(temp):
-    if temp > 30.0:
-        return "오늘은 매우 더워요! 더위 조심하세요."
-    elif temp > 25.0:
-        return "오늘은 더운 날씨예요. 물 많이 마시고 적당히 움직이세요."
-    elif temp > 20.0:
-        return "오늘은 날씨가 쾌적해요. 산책하기 좋은 날씨네요."
-    else:
-        return "오늘은 날씨가 조금 쌀쌀해요. 따뜻하게 입고 다니세요."
- """
 # 현재 습도 정보에 따른 출력
 def fHumidity(humidity):
     if humidity >= 30 and humidity <= 60:
-        return "습도가 적정합니다."
+        return ["습도적당! 쾌적~~", "기쁜표정.png"]
     elif humidity < 30:
-        return "습도가 너무 낮습니다. 가습기를 사용하는 것이 좋습니다."
+        return ["습도낮음! 물과보습 필수!", "슬픈표정.png"]
     elif humidity > 60:
-        return "습도가 너무 높습니다. 제습기를 사용하는 것이 좋습니다."
+        return ["습도높음! 불쾌지수업!!", "놀란표정.png"]
     else:
-        return "자료없음"
+        return ["자료없음"]
 
 # 현재 바람 정보에 따른 출력
 def fWind(wind):
     if wind < 0.3:
-        return "이정도면 바람이 안부네요!" 
+        return ["이정도면 바람이 안부네요!", "기쁜표정.png"]
     elif wind >= 0.3 and wind <= 1.5:
-        return "실바람이 불어요!" 
+        return ["실바람이 불어요!", "기쁜표정.png"]
     elif wind >= 1.6 and wind <= 3.3:
-        return "남실바람이 불어요!" 
+        return ["남실바람이 불어요!", "슬픈표정.png"]
     elif wind >= 3.4 and wind <= 5.4:
-        return "산들바람이 불어요!" 
+        return ["산들바람이 불어요!", "놀란표정.png"]
     else:
-        return "바람이 강하니 외출을 자제해주세요!" 
-
+        return ["바람이 강하니 외출을 자제해주세요!", "놀란표정.png"]
 # 현재 강수량 정보에 따른 출력
 def fRainfall(rainfall):
-    if rainfall == 0 :
-        return "오늘은 비가 안와요!" 
+    if rainfall == 0:
+        return ["오늘은 비가 안와요!", "기쁜표정.png"]
     elif rainfall < 3.0:
-        return "약한 비가 와요!" 
+        return ["약한 비가 와요!", "슬픈표정.png"]
     elif rainfall >= 3.0 and rainfall < 15.0:
-        return "적당한 비가 내려요!" 
+        return ["적당한 비가 내려요!", "슬픈표정.png"]
     elif rainfall >= 15.0:
-        return "강한 비가 내리니 외출을 자제하세요!" 
+        return ["강한 비가 내리니 외출을 자제하세요!", "놀란표정.png"]
     elif rainfall >= 30.0:
-        return "매우 강한 비가 내리니 외출하지마세요!" 
-    else :
+        return ["매우 강한 비가 내리니 외출하지마세요!", "놀란표정.png"]
+    else:
         print("자료없음")
 
 # 현재 초미세먼지 정보에 따른 출력
 def fUltra(ultraDust):
     if ultraDust >= 0:
-        return "좋음"
+        return ["초미세먼지 좋음!", "기쁜표정.png"]
     elif ultraDust >= 16:
-        return "보통"
+        return ["초미세먼지 보통!", "기쁜표정.png"]
     elif ultraDust >= 36:
-        return "나쁨"
+        return ["초미세먼지 나쁨!", "슬픈표정.png"]
     elif ultraDust >= 76:
-        return "매우 나쁨"
+        return ["초미세먼지 매우 나쁨!", "놀란표정.png"]
     else:
-        return "자료없음"
+        return ["자료없음"]
 
 # 현재 미세먼지 정보에 따라 출력
 def fDust(dust):
     if dust >= 0:
-        return "좋음"
+        return ["미세먼지 좋음!", "기쁜표정.png"]
     elif dust >= 31:
-        return "보통"
+        return ["미세먼지 보통!", "기쁜표정.png"]
     elif dust >= 81:
-        return "나쁨"
+        return ["미세먼지 나쁨!", "슬픈표정.png"]
     elif dust >= 151:
-        return "매우나쁨"
+        return ["미세먼지 매우나쁨 KF94필수..", "놀란표정.png"]
     else:
-        return "자료없음"
+        return ["자료없음"]
 
 # 총평
-
+""" def fDress(temp):
+    if temp >= 28:
+        return "더위가 매우 심하니 민소매, 반팔, 반바지, 린넨 옷을 입는 것을 추천합니다. 외출활동을 자제하는 것을 권장해요."
+    elif temp >= 23:
+        return "더운 여름 날씨예요. 반팔, 얇은 셔츠, 반바지, 면바지를 입는 것을 추천해요. 주변 공원에서 피크닉을 즐기는 것은 어떨까요?"
+    elif temp >= 20:
+        return "블라우스, 긴팔 티, 면바지, 슬랙스를 입는 것을 추천해요. 조금 더운 여름 날씨예요. 낮 시간에도 그리 덥지 않으니 주변 공원에 피크닉을 다녀오는 것은 어떨까요?"
+    elif temp >= 17:
+        return "따듯한 날씨에는 얇은 가디건이나 니트, 맨투맨, 후드, 긴 바지를 입는 것을 추천해요. 다양한 스타일로 즐길 수 있는 날씨예요."
+    elif temp >= 12:
+        return "일교차가 커지는 시기예요. 자켓, 가디건, 청자켓, 니트, 청바지를 입는 것을 추천해요. 따듯한 겉옷을 챙겨 다니는 것은 어떨까요?"
+    elif temp >= 9:
+        return "트렌치코트, 야상, 점퍼, 기모 바지를 입는 것을 추천해요. 오늘같은 날씨가 아니면 입기 힘든 트렌치코트를 입어보는건 어떨까요?"
+    elif temp >= 5:
+        return "추위가 시작되거나 끝나가는 시기예요. 울 코트, 히트텍, 가죽 옷, 기모 옷을 입는 것을 추천해요. 이런 날씨엔 감기에 걸리기 쉬우니 따듯하게 입고 가는건 어떨까요?"
+    else:
+        return "한겨울이라 추우니 패딩, 두꺼운 코트, 누빔 옷, 기모, 목도리를 입는 것을 추천해요. 체온 유지를 위해 잠깐 패션을 포기하는 건 어떨까요?"
+"""
 # 온도 강수량 습도 미세먼지
 
 
 # 출력
 
 print(f"선택지역:{area}")
-print(f"Temperature:{temp}")
+print(f"온도:{temp}")
 print(f"{maxTemp}")
 print(f"{minTemp}")
 print(f"체감온도:{actualTemp}")
 print(f"{temp_diff}")
 print(f"습도: {humidity} ")
-# fHumidity()
 print(f"바람: {wind} m/s", end=' / ')
-# fWind()
 print(f"강수량: {rainfall} mm", end=' / ')
 print(f"초미세먼지:{ultraDust}㎍/m³", end=' / ')
 print(f"미세먼지:{dust}㎍/m³", end=' / ')
@@ -192,6 +197,24 @@ class WindowClass(QMainWindow, form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        #이미지부분----------------
+        self.image_data2 = self.findChild(QLabel, "label_2")
+        self.image_data2.setPixmap(QPixmap(fHumidity(humidity)[1]))
+
+        self.image_data3 = self.findChild(QLabel, "label_3")
+        self.image_data3.setPixmap(QPixmap(fWind(wind)[1]))
+
+        self.image_data5 = self.findChild(QLabel, "label_5")
+        self.image_data5.setPixmap(QPixmap(fRainfall(rainfall)[1]))
+
+        self.image_data6 = self.findChild(QLabel, "label_6")
+        self.image_data6.setPixmap(QPixmap(fUltra(ultraDust)[1]))
+
+        self.image_data7 = self.findChild(QLabel, "label_7")
+        self.image_data7.setPixmap(QPixmap(fDust(dust)[1]))
+
+
+        #------------------------------
         #지역명
         self.area_data = self.findChild(QLabel, "area_data")
         self.area_data.setText(area)
@@ -215,31 +238,31 @@ class WindowClass(QMainWindow, form_class):
         self.fhumidity_data.setText(str(humidity))
         #습도멘트
         self.fhumidity_comm = self.findChild(QLabel, "fhumidity_comm")
-        self.fhumidity_comm.setText(fHumidity(humidity))
+        self.fhumidity_comm.setText(fHumidity(humidity)[0])
         #바람
         self.wind_data = self.findChild(QLabel, "wind_data")
         self.wind_data.setText(str(wind))
         #바람멘트
         self.wind_comm = self.findChild(QLabel, "wind_comm")
-        self.wind_comm.setText(fWind(wind))
+        self.wind_comm.setText(fWind(wind)[0])
         #강수량
         self.rain_data = self.findChild(QLabel, "rain_data")
         self.rain_data.setText(str(rainfall))
         #강수량멘트
         self.rain_comm = self.findChild(QLabel, "rain_comm")
-        self.rain_comm.setText(fRainfall(rainfall))
+        self.rain_comm.setText(fRainfall(rainfall)[0])
         #미세먼지데이터
         self.dust_data = self.findChild(QLabel, "dust_data")
         self.dust_data.setText(str(dust))
         #미세먼지멘트
         self.dust_comm = self.findChild(QLabel, "dust_comm")
-        self.dust_comm.setText(fDust(dust))
+        self.dust_comm.setText(fDust(dust)[0])
         #초미세먼지데이터
         self.udust_data = self.findChild(QLabel, "udust_data")
         self.udust_data.setText(str(ultraDust))
         #초미세먼지멘트
         self.udust_comm = self.findChild(QLabel, "udust_comm")
-        self.udust_comm.setText(fUltra(ultraDust))
+        self.udust_comm.setText(fUltra(ultraDust)[0])
         #총데이터
 
 
