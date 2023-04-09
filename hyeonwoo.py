@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel
 from PyQt5 import uic
 from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QFont
 import sys
 
 # url연결
@@ -38,7 +39,6 @@ def int_extract_number(string):
 # 20초동안 창을 켜둬서 내가 원하는지역검색후에 가만히 두면 크롤링됨(시간변경가능)
 time.sleep(5)
 
-
 # 지역
 area = browser.find_element(
     By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
@@ -47,12 +47,16 @@ temp = browser.find_element(By.CSS_SELECTOR, "span.tmp").text
 temp = temp[:-1]
 
 # 최저온도
-minTemp = browser.find_element(By.CSS_SELECTOR, 'span.tmin').text
+minTemp = browser.find_element(By.CSS_SELECTOR, 'span.tmin').text.replace(
+    "최저", "")
 def fMinTemp(minTemp):
     if minTemp == "-":
         return "자료가없습니다."
+    else:
+        return minTemp
 # 최고온도
-maxTemp = browser.find_element(By.CSS_SELECTOR, 'span.tmax').text
+maxTemp = browser.find_element(By.CSS_SELECTOR, 'span.tmax').text.replace(
+    "최고", "")
 # 체감온도
 actualTemp = browser.find_element(By.CLASS_NAME, 'chill').text.replace(
     "체감", "").replace("(", "").replace(")", "")
@@ -168,6 +172,8 @@ def fDust(dust):
     else:
         return "한겨울이라 추우니 패딩, 두꺼운 코트, 누빔 옷, 기모, 목도리를 입는 것을 추천해요. 체온 유지를 위해 잠깐 패션을 포기하는 건 어떨까요?"
 """
+
+
 # 온도 강수량 습도 미세먼지
 
 
@@ -197,6 +203,28 @@ class WindowClass(QMainWindow, form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        #폰트
+        font = QFont('Arial', 12)
+        font.setBold(True)
+        self.area_data.setFont(font)
+        self.temp_diff_data.setFont(font)
+        self.currentTemp.setFont(font)
+        self.maxTemp.setFont(font)
+        self.minTemp.setFont(font)
+        self.actTemp.setFont(font)
+        self.fhumidity_data.setFont(font)
+        self.fhumidity_comm.setFont(font)
+        self.wind_data.setFont(font)
+        self.wind_comm.setFont(font)
+        self.rain_data.setFont(font)
+        self.rain_comm.setFont(font)
+        self.dust_data.setFont(font)
+        self.dust_comm.setFont(font)
+        self.udust_data.setFont(font)
+        self.udust_comm.setFont(font)
+        
+        
+
         #이미지부분----------------
         self.image_data2 = self.findChild(QLabel, "label_2")
         self.image_data2.setPixmap(QPixmap(fHumidity(humidity)[1]))
@@ -229,7 +257,7 @@ class WindowClass(QMainWindow, form_class):
         self.maxTemp.setText(maxTemp)
         #최저온도
         self.minTemp = self.findChild(QLabel, "minTemp")
-        self.minTemp.setText(minTemp)
+        self.minTemp.setText(fMinTemp(minTemp))
         #체감온도
         self.actTemp = self.findChild(QLabel, "actTemp")
         self.actTemp.setText(actualTemp)
@@ -264,9 +292,12 @@ class WindowClass(QMainWindow, form_class):
         self.udust_comm = self.findChild(QLabel, "udust_comm")
         self.udust_comm.setText(fUltra(ultraDust)[0])
         #총데이터
+        #폰트
+        
 
+        
 
-
+        
 
 if __name__ == "__main__":
     # QApplication : 프로그램을 실행시켜주는 클래스
