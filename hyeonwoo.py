@@ -1,3 +1,9 @@
+"""
+문제들
+1.바람 소수점까지안나옴 0.7 -> 0.0 으로나옴
+2.먼지 if루프 안돌음
+"""
+
 # 정규식(regular expression) 쉽게 문자열에서 패턴에 해당하는 부분을 추출
 import re
 # 동적크롤링(스크래핑)
@@ -44,7 +50,7 @@ area = browser.find_element(
     By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
 # 온도
 temp = browser.find_element(By.CSS_SELECTOR, "span.tmp").text
-temp = temp[:-1]
+temp = float(temp[:-1])
 
 # 최저온도
 minTemp = browser.find_element(By.CSS_SELECTOR, 'span.tmin').text.replace(
@@ -55,8 +61,7 @@ def fMinTemp(minTemp):
     else:
         return minTemp
 # 최고온도
-maxTemp = browser.find_element(By.CSS_SELECTOR, 'span.tmax').text.replace(
-    "최고", "")
+maxTemp = browser.find_element(By.CSS_SELECTOR, 'span.tmax').text.replace("최고", "")
 # 체감온도
 actualTemp = browser.find_element(By.CLASS_NAME, 'chill').text.replace(
     "체감", "").replace("(", "").replace(")", "")
@@ -71,8 +76,8 @@ humidity_str = items[0].find_element(By.CLASS_NAME, 'val').text
 humidity = int(re.findall('\d+', humidity_str)[0])
 
 # 바람
-wind_str = items[1].find_element(By.CLASS_NAME, 'val').text
-wind = float(re.findall('\d+', wind_str)[0])
+wind_str = browser.find_element(By.CSS_SELECTOR,'div.cmp-cur-weather.wbg.wbg-type2.BGDB00 > ul > li:nth-child(2) > span.val').text
+wind = float(re.findall('\d+\.\d+', wind_str)[0])
 
 # 강수량
 rainfall_str = items[2].find_element(By.CLASS_NAME, 'val').text
@@ -87,7 +92,18 @@ ultraDust = int(browser.find_element(By.CSS_SELECTOR,
 dust_str = browser.find_element(By.CSS_SELECTOR,
         'ul.wrap-2.air-wrap.no-underline > li:nth-child(2) > strong.air-level.val > span > span.air-lvv').get_attribute('textContent')
 dust = int_extract_number(dust_str)
-
+print(type(dust))
+print(f"선택지역:{area}")
+print(f"온도:{temp}")
+print(f"{maxTemp}")
+print(f"{minTemp}")
+print(f"체감온도:{actualTemp}")
+print(f"{temp_diff}")
+print(f"습도: {humidity} ")
+print(f"바람: {wind} m/s", end=' / ')
+print(f"강수량: {rainfall} mm", end=' / ')
+print(f"초미세먼지:{ultraDust}㎍/m³", end=' / ')
+print(f"미세먼지:{dust}㎍/m³", end=' / ')
 
 # 현재 습도 정보에 따른 출력
 def fHumidity(humidity):
@@ -172,24 +188,80 @@ def fDust(dust):
     else:
         return "한겨울이라 추우니 패딩, 두꺼운 코트, 누빔 옷, 기모, 목도리를 입는 것을 추천해요. 체온 유지를 위해 잠깐 패션을 포기하는 건 어떨까요?"
 """
+def totalWeather(temp,humidity,wind,rainfall,dust,ultraDust):
+    if temp >= 32.0:
+        temp_output = "매우덥습니다! 반팔,반바지,샌들을 추천합니다."
+    elif temp >= 28.0:
+        temp_output = "더위가 매우 심하니 민소매, 반팔, 반바지, 린넨 옷을 입는 것을 추천합니다."
+    elif temp >= 23.0:
+        temp_output = "반팔, 얇은 셔츠, 반바지, 면바지를 입는 것을 추천해요. "
+    elif temp >= 20.0:
+        temp_output = "블라우스, 긴팔 티, 면바지, 슬랙스를 입는 것을 추천해요."
+    elif temp >= 17.0:
+        temp_output = "따듯한 날씨에는 얇은 가디건이나 니트, 맨투맨, 후드, 긴 바지를 입는 것을 추천해요. "
+    elif temp >= 12.0:
+        temp_output = "일교차가 커지는 시기예요. 자켓, 가디건, 청자켓, 니트, 청바지를 입는 것을 추천해요."
+    elif temp >= 9.0:
+        temp_output = "트렌치코트, 야상, 점퍼, 기모 바지를 입는 것을 추천해요.!"
+    elif temp >= 5.0:
+        temp_output = "울 코트, 히트텍, 가죽 옷, 기모 옷을 입는 것을 추천해요."
+    else:
+        return "패딩, 두꺼운 코트, 누빔 옷, 기모, 목도리를 입는 것을 추천해요."
+    if humidity >= 30 and humidity <= 60:
+        humidity_output = "습도적당! 쾌적~~"
+    elif humidity < 30:
+        humidity_output = "습도낮음! 물과보습 필수!"
+    elif humidity > 60:
+        humidity_output ="습도높음! 불쾌지수업!!"
+    else:
+        humidity_output = "자료없음"
+    if wind < 0.3:
+        wind_output = "바람이 거의안불어요! 앞머리 안날리는날!"
+    elif wind >= 0.3 and wind <= 1.5:
+        wind_output = "바람이 조금불어요! 앞머리 지킬수있어요!"
+    elif wind >= 1.6 and wind <= 3.3:
+        wind_output = "조금강한 바람이 불어요.앞머리 주의!!"
+    elif wind >= 3.4 and wind <= 5.4:
+        wind_output = "강한바람이 불어요! 앞머리주의!!"
+    else:
+        wind_output = "태풍인가..!? 외출자제해주세요!!"
+# 현재 강수량 정보에 따른 출력
+    if rainfall == 0:
+        rainfall_output = "오늘은 비가 안와요!"
+    elif rainfall < 3.0:
+        rainfall_output = "약한 비가 와요! 혹시모르니 우산챙기세요!"
+    elif rainfall >= 3.0 and rainfall < 15.0:
+        rainfall_output = "우산 꼭 챙기기!!"
+    elif rainfall >= 15.0:
+        rainfall_output = "비가많이오네요!! 우산 꼭 챙기기!!"
+    elif rainfall >= 30.0:
+        rainfall_output = "비가 너무많이와요!! 우산과 샌들은 필수!!"
+    else:
+        rainfall_output = "자료없음"
+    if dust >= 0:
+        dust_output =  "미세먼지 좋음!"
+    elif dust >= 31:
+        dust_output =  "미세먼지 보통!"
+    elif dust >= 81:
+        dust_output =  "미세먼지 나쁨!"
+    elif dust >= 151:
+        dust_output =  "미세먼지 매우나쁨 KF94필수.."
+    else:
+        dust_output =  "자료없음"
+    if ultraDust >= 0:
+        ultraDust_output = "초미세먼지 좋음! 오랜만에 이런날씨가"
+    elif ultraDust >= 16:
+        ultraDust_output = "초미세먼지 보통! 피크닉하기에 좋은날!!"
+    elif ultraDust >= 36:
+        ultraDust_output = "초미세먼지 나쁨! 마스크 꼭 착용!"
+    elif ultraDust >= 76:
+        ultraDust_output = "초미세먼지 매우 나쁨! 창문닫고외출하시고 마스크 꼭 착용!!"
+    else:
+        ultraDust_output = "자료없음"
 
-
-# 온도 강수량 습도 미세먼지
-
-
-# 출력
-
-print(f"선택지역:{area}")
-print(f"온도:{temp}")
-print(f"{maxTemp}")
-print(f"{minTemp}")
-print(f"체감온도:{actualTemp}")
-print(f"{temp_diff}")
-print(f"습도: {humidity} ")
-print(f"바람: {wind} m/s", end=' / ')
-print(f"강수량: {rainfall} mm", end=' / ')
-print(f"초미세먼지:{ultraDust}㎍/m³", end=' / ')
-print(f"미세먼지:{dust}㎍/m³", end=' / ')
+    output = [temp_output, humidity_output, wind_output, rainfall_output, ultraDust_output, dust_output]
+    output_str = "\n".join(output)
+    return output_str
 
 browser.quit()
 # UI파일 연결
@@ -203,6 +275,7 @@ class WindowClass(QMainWindow, form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
         #폰트
         font = QFont('Arial', 12)
         font.setBold(True)
@@ -222,7 +295,9 @@ class WindowClass(QMainWindow, form_class):
         self.dust_comm.setFont(font)
         self.udust_data.setFont(font)
         self.udust_comm.setFont(font)
-        
+        font2 = QFont('Arial',10)
+        font2.setBold(True)
+        self.dress_comm.setFont(font2)
         
 
         #이미지부분----------------
@@ -251,7 +326,7 @@ class WindowClass(QMainWindow, form_class):
         self.temp_diff_data.setText(temp_diff)
         #현재온도
         self.currentTemp = self.findChild(QLabel, "currentTemp")
-        self.currentTemp.setText(temp)
+        self.currentTemp.setText(str(temp))
         #최고온도
         self.maxTemp = self.findChild(QLabel, "maxTemp")
         self.maxTemp.setText(maxTemp)
@@ -292,12 +367,8 @@ class WindowClass(QMainWindow, form_class):
         self.udust_comm = self.findChild(QLabel, "udust_comm")
         self.udust_comm.setText(fUltra(ultraDust)[0])
         #총데이터
-        #폰트
-        
-
-        
-
-        
+        self.dress_comm = self.findChild(QLabel, "dress_comm")
+        self.dress_comm.setText(totalWeather(temp,humidity,wind,rainfall,dust,ultraDust))
 
 if __name__ == "__main__":
     # QApplication : 프로그램을 실행시켜주는 클래스
