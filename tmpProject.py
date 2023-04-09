@@ -68,7 +68,8 @@ humidity = int(re.findall('\d+', humidity_str)[0])
 
 # 바람
 wind_str = items[1].find_element(By.CLASS_NAME, 'val').text
-wind = float(re.findall('\d+', wind_str)[0])
+#wind = float(re.findall('\d+', wind_str)[0])
+wind = float_extract_number(wind_str)
 
 # 강수량
 rainfall_str = items[2].find_element(By.CLASS_NAME, 'val').text
@@ -180,10 +181,10 @@ print(f"{minTemp}")
 print(f"체감온도:{actualTemp}")
 print(f"{temp_diff}")
 print(f"습도: {humidity} ")
-print(f"바람: {wind} m/s", end=' / ')
-print(f"강수량: {rainfall} mm", end=' / ')
-print(f"초미세먼지:{ultraDust}㎍/m³", end=' / ')
-print(f"미세먼지:{dust}㎍/m³", end=' / ')
+print(f"바람: {wind} m/s")
+print(f"강수량: {rainfall} mm")
+print(f"초미세먼지:{ultraDust}㎍/m³")
+print(f"미세먼지:{dust}㎍/m³")
 
 browser.quit()
 # UI파일 연결
