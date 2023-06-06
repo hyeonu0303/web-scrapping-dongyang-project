@@ -4,10 +4,6 @@ import re
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QGridLayout, QVBoxLayout,QWidget
-from PyQt5 import uic
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtGui import QFont
 import sys
 
 # url연결
@@ -245,124 +241,105 @@ def totalWeather(temp,humidity,wind,rainfall,dust,ultraDust):
     output_str = "\n".join(output)
     return output_str
 browser.quit()
-# UI파일 연결
-form_class = uic.loadUiType("UIdesign.ui")[0]
 
-# 화면을 띄우는데 사용되는 Class 선언
-class WindowClass(QMainWindow, form_class):
-    def __init__(self):
-        super().__init__()
-        self.setupUi(self)
+data = {
+    'area': area,
+    'temp': temp,
+    'maxTemp': maxTemp,
+    'minTemp': minTemp,
+    'actualTemp': actualTemp,
+    'temp_diff': temp_diff,
+    'humidity': humidity,
+    'wind': wind,
+    'rainfall': rainfall,
+    'ultraDust': ultraDust,
+    'dust': dust
+}
 
-        #폰트---------------------
-        font = QFont('Arial', 12)
-        font.setBold(True)
-        self.area_data.setFont(font)
-        self.temp_diff_data.setFont(font)
-        self.currentTemp.setFont(font)
-        self.maxTemp.setFont(font)
-        self.minTemp.setFont(font)
-        self.actTemp.setFont(font)
-        self.fhumidity_data.setFont(font)
-        self.fhumidity_comm.setFont(font)
-        self.wind_data.setFont(font)
-        self.wind_comm.setFont(font)
-        self.rain_data.setFont(font)
-        self.rain_comm.setFont(font)
-        self.dust_data.setFont(font)
-        self.dust_comm.setFont(font)
-        self.udust_data.setFont(font)
-        self.udust_comm.setFont(font)
-        font2 = QFont('Arial',10)
-        font2.setBold(True)
-        self.dress_comm.setFont(font2)
-        
+html_template = '''
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Data</title>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+        }}
+        h1 {{
+            color: #333;
+        }}
+        table {{
+            border-collapse: collapse;
+            margin-top: 20px;
+        }}
+        table td, table th {{
+            border: 1px solid #333;
+            padding: 8px;
+        }}
+    </style>
+</head>
+<body>
+    <h1>Weather Data</h1>
+    <table>
+        <tr>
+            <th>지역</th>
+            <td>{area}</td>
+        </tr>
+        <tr>
+            <th>온도</th>
+            <td>{temp}</td>
+        </tr>
+        <tr>
+            <th>최고온도</th>
+            <td>{maxTemp}</td>
+        </tr>
+        <tr>
+            <th>최저온도</th>
+            <td>{minTemp}</td>
+        </tr>
+        <tr>
+            <th>체감온도</th>
+            <td>{actualTemp}</td>
+        </tr>
+        <tr>
+            <th>어제보다 온도차</th>
+            <td>{temp_diff}</td>
+        </tr>
+        <tr>
+            <th>습도</th>
+            <td>{humidity}</td>
+        </tr>
+        <tr>
+            <th>바람</th>
+            <td>{wind}</td>
+        </tr>
+        <tr>
+            <th>강수량</th>
+            <td>{rainfall}</td>
+        </tr>
+        <tr>
+            <th>초미세먼지</th>
+            <td>{ultraDust}</td>
+        </tr>
+        <tr>
+            <th>미세먼지</th>
+            <td>{dust}</td>
+        </tr>
+    </table>
+</body>
+<style>
 
-        #이미지부분----------------
-        #지역명
-        self.area_data = self.findChild(QLabel, "area_data")
-        self.area_data.setText(area)
+</style>
+</html>
+'''
 
-        #어제보다 몇도높은지부분
-        self.temp_diff_data = self.findChild(QLabel, "temp_diff_data")
-        self.temp_diff_data.setText(temp_diff)
-        #현재온도
-        self.currentTemp = self.findChild(QLabel, "currentTemp")
-        self.currentTemp.setText(str(temp))
-        #체감온도
-        self.actTemp = self.findChild(QLabel, "actTemp")
-        self.actTemp.setText(actualTemp)
-        #최고온도
-        self.maxTemp = self.findChild(QLabel, "maxTemp")
-        self.maxTemp.setText(maxTemp)
-        #최저온도
-        self.minTemp = self.findChild(QLabel, "minTemp")
-        self.minTemp.setText(fMinTemp(minTemp))
+# 데이터를 HTML 템플릿에 적용
+html_output = html_template.format(**data)
 
-        #습도------------------------------------
-        self.image_data2 = self.findChild(QLabel, "label_2")
-        self.image_data2.setPixmap(QPixmap(fHumidity(humidity)[1]))
-        #습도데이터
-        self.fhumidity_data = self.findChild(QLabel, "fhumidity_data")
-        self.fhumidity_data.setText(str(humidity))
-        #습도멘트
-        self.fhumidity_comm = self.findChild(QLabel, "fhumidity_comm")
-        self.fhumidity_comm.setText(fHumidity(humidity)[0])
+# HTML 파일로 저장
+with open('weather_data.html', 'w', encoding='utf-8') as f:
+    f.write(html_output)
 
-        #바람------------------------------------
-        self.image_data3 = self.findChild(QLabel, "label_3")
-        self.image_data3.setPixmap(QPixmap(fWind(wind)[1]))
-        #바람데이터
-        self.wind_data = self.findChild(QLabel, "wind_data")
-        self.wind_data.setText(str(wind))
-        #바람멘트
-        self.wind_comm = self.findChild(QLabel, "wind_comm")
-        self.wind_comm.setText(fWind(wind)[0])
-
-        #강수량------------------------------------
-        self.image_data5 = self.findChild(QLabel, "label_5")
-        self.image_data5.setPixmap(QPixmap(fRainfall(rainfall)[1]))
-        #강수량
-        self.rain_data = self.findChild(QLabel, "rain_data")
-        self.rain_data.setText(str(rainfall))
-        #강수량멘트
-        self.rain_comm = self.findChild(QLabel, "rain_comm")
-        self.rain_comm.setText(fRainfall(rainfall)[0])
-
-        #미세먼지------------------------------------
-        self.image_data7 = self.findChild(QLabel, "label_7")
-        self.image_data7.setPixmap(QPixmap(fDust(dust)[1]))
-        #미세먼지데이터
-        self.dust_data = self.findChild(QLabel, "dust_data")
-        self.dust_data.setText(str(dust))
-        #미세먼지멘트
-        self.dust_comm = self.findChild(QLabel, "dust_comm")
-        self.dust_comm.setText(fDust(dust)[0])
-
-        #초미세먼지------------------------------------
-        self.image_data6 = self.findChild(QLabel, "label_6")
-        self.image_data6.setPixmap(QPixmap(fUltra(ultraDust)[1]))
-        #초미세먼지데이터
-        self.udust_data = self.findChild(QLabel, "udust_data")
-        self.udust_data.setText(str(ultraDust))
-        #초미세먼지멘트
-        self.udust_comm = self.findChild(QLabel, "udust_comm")
-        self.udust_comm.setText(fUltra(ultraDust)[0])
-
-        #총데이터
-        self.dress_comm = self.findChild(QLabel, "dress_comm")
-        self.dress_comm.setText(totalWeather(temp,humidity,wind,rainfall,dust,ultraDust))
-    
-
-if __name__ == "__main__":
-    # QApplication : 프로그램을 실행시켜주는 클래스
-    app = QApplication(sys.argv)
-
-    # WindowClass의 인스턴스 생성
-    myWindow = WindowClass()
-
-    # 프로그램 화면을 보여주는 코드
-    myWindow.show()
-
-    # 프로그램을 이벤트루프로 진입시키는(프로그램을 작동시키는) 코드
-    app.exec_()
