@@ -1,14 +1,10 @@
-# 정규식(regular expression) 쉽게 문자열에서 패턴에 해당하는 부분을 추출
+# 정규식(re)
 import re
 # 동적크롤링(스크래핑)
-import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QGridLayout, QVBoxLayout,QWidget
-from PyQt5 import uic
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtGui import QFont
-import sys
+import time
+import webbrowser
 
 # url연결
 url = "https://www.weather.go.kr/w/index.do"
@@ -16,6 +12,7 @@ url = "https://www.weather.go.kr/w/index.do"
 browser = webdriver.Chrome()
 browser.implicitly_wait(15) # 최대 15초 동안 대기
 browser.get(url)
+time.sleep(15)
 
 #'-'문자를 숫자0으로 반환하는함수
 def float_extract_number(string):
@@ -41,6 +38,11 @@ def int_extract_number(string):
 # 지역
 area = browser.find_element(
     By.CSS_SELECTOR, 'a.serch-area-btn.accordionsecond-tit').text
+# 갱신시간
+realTime = browser.find_element(
+    By.CSS_SELECTOR, '#current-weather > div.cmp-cmn-para.odam-updated > a > span'
+).text
+
 # 온도
 temp = browser.find_element(By.CSS_SELECTOR, "span.tmp").text
 temp = float(temp[:-1])
@@ -89,280 +91,266 @@ dust_str = browser.find_element(By.CSS_SELECTOR,
         'ul.wrap-2.air-wrap.no-underline > li:nth-child(2) > strong.air-level.val > span > span.air-lvv').get_attribute('textContent')
 dust = int_extract_number(dust_str)
 print(f"선택지역:{area}")
+print(f"시간:{realTime}")
 print(f"온도:{temp}")
 print(f"{maxTemp}")
-print(f"{minTemp}")
+print(f"{minTemp}"  )
 print(f"체감온도:{actualTemp}")
 print(f"{temp_diff}")
 print(f"습도: {humidity} ")
-print(f"바람: {wind} m/s", end=' / ')
-print(f"강수량: {rainfall} mm", end=' / ')
-print(f"초미세먼지:{ultraDust}㎍/m³", end=' / ')
-print(f"미세먼지:{dust}㎍/m³", end=' / ') 
-
-# 현재 습도 정보에 따른 출력
-def fHumidity(humidity):
-    # if humidity >= 30 and humidity <= 60:
-    if humidity <= 30:
-        return ["습도낮음! 물과보습 필수!", "슬픈표정.png"]
-    elif humidity <= 60:
-        return ["습도적당! 쾌적~~", "기쁜표정.png"]
-    elif humidity <= 100:
-        return ["습도높음! 불쾌지수업!!", "놀란표정.png"]
-    else:
-        return ["자료없음"]
-
-# 현재 바람 정보에 따른 출력
-def fWind(wind):
-    if wind <= 0.3:
-        return ["이정도면 바람이 안부네요!", "기쁜표정.png"]
-    elif wind <= 1.5:
-        return ["실바람이 불어요!", "기쁜표정.png"]
-    elif wind <= 3.3:
-        return ["남실바람이 불어요!", "슬픈표정.png"]
-    elif wind <= 5.4:
-        return ["산들바람이 불어요!", "놀란표정.png"]
-    else:
-        return ["바람이 강하니 외출을 자제해주세요!", "놀란표정.png"]
-# 현재 강수량 정보에 따른 출력
-def fRainfall(rainfall):
-    if rainfall == 0.0:
-        return ["오늘은 비가 안와요!", "기쁜표정.png"]
-    elif rainfall <= 3.0:
-        return ["적은 비가 와요!", "슬픈표정.png"]
-    elif rainfall <= 15.0:
-        return ["적당한 비가 내려요!", "슬픈표정.png"]
-    elif rainfall <= 30.0:
-        return ["강한 비가 내리니 외출을 자제하세요!", "놀란표정.png"]
-    elif rainfall >= 31.0:
-        return ["매우 강한 비가 내리니 외출하지마세요!", "놀란표정.png"]
-    else:
-        print("자료없음")
-
-# 현재 초미세먼지 정보에 따른 출력
-def fUltra(ultraDust):
-    if ultraDust <= 15:
-        return ["초미세먼지 좋음!", "기쁜표정.png"]
-    elif ultraDust <=35:
-        return ["초미세먼지 보통!", "./해맑은표정.jpg"]
-    elif ultraDust <= 75:
-        return ["초미세먼지 나쁨!", "슬픈표정.png"]
-    elif ultraDust <= 250:
-        return ["초미세먼지 매우 나쁨!", "놀란표정.png"]
-    else:
-        return ["자료없음"]
-
-# 현재 미세먼지 정보에 따라 출력
-def fDust(dust):
-    if dust <= 30:
-        return ["미세먼지 좋음!", "기쁜표정.png"]
-    elif dust <= 80:
-        return ["미세먼지 보통!", "기쁜표정.png"]
-    elif dust <= 150:
-        return ["미세먼지 나쁨!", "슬픈표정.png"]
-    elif dust >= 151:
-        return ["미세먼지 매우나쁨 KF94필수..", "놀란표정.png"]
-    else:
-        return ["자료없음"]
-
+print(f"바람: {wind} m/s")
+print(f"강수량: {rainfall} mm")
+print(f"초미세먼지:{ultraDust}㎍/m³")
+print(f"미세먼지:{dust}㎍/m³") 
 def totalWeather(temp,humidity,wind,rainfall,dust,ultraDust):
     #온도
     if temp > 0 and temp <= 4.0:
-        temp_output = "울 코트, 히트텍, 가죽 옷, 기모 옷을 입는 것을 추천해요."
+        temp_output = "❤️추천 옷: 울 코트, 히트텍, 가죽 옷, 기모 옷을 입는 것을 추천해요."
     elif temp <= 8.0:
-        temp_output = "트렌치코트, 야상, 점퍼, 기모 바지를 입는 것을 추천해요.!"
+        temp_output = "❤️추천 옷: 트렌치코트, 야상, 점퍼, 기모 바지를 입는 것을 추천해요.!"
     elif temp <= 12.0:
-        temp_output = "일교차가 커지는 시기예요. 자켓, 가디건, 청자켓, 니트, 청바지를 입는 것을 추천해요."
+        temp_output = "❤️추천 옷: 일교차가 커지는 시기예요. 자켓, 가디건, 청자켓, 니트, 청바지를 입는 것을 추천해요."
     elif temp <= 16.0:
-        temp_output = "따듯한 날씨에는 얇은 가디건이나 니트, 맨투맨, 후드, 긴 바지를 입는 것을 추천해요. "
+        temp_output = "❤️추천 옷: 따듯한 날씨에는 얇은 가디건이나 니트, 맨투맨, 후드, 긴 바지를 입는 것을 추천해요. "
     elif temp <= 20.0:
-        temp_output = "블라우스, 긴팔 티, 면바지, 슬랙스를 입는 것을 추천해요."
+        temp_output = "❤️추천 옷: 블라우스, 긴팔 티, 면바지, 슬랙스를 입는 것을 추천해요."
     elif temp <= 24.0:
-        temp_output = "반팔, 얇은 셔츠, 반바지, 면바지를 입는 것을 추천해요. "
+        temp_output = "❤️추천 옷: 반팔, 얇은 셔츠, 반바지, 면바지를 입는 것을 추천해요. "
     elif temp <= 28.0:
-        temp_output = "더위가 매우 심하니 민소매, 반팔, 반바지, 린넨 옷을 입는 것을 추천합니다."
+        temp_output = "❤️추천 옷: 더위가 매우 심하니 민소매, 반팔, 반바지, 린넨 옷을 입는 것을 추천합니다."
     elif temp <= 40.0:
-        temp_output = "매우덥습니다! 반팔,반바지,샌들을 추천합니다. (실외활동주의)"
+        temp_output = "❤️추천 옷: 매우덥습니다! 반팔,반바지,샌들을 추천합니다. (실외활동주의)"
     else:
-        return "패딩, 두꺼운 코트, 누빔 옷, 기모, 목도리를 입는 것을 추천해요."
+        return "추천 옷: 패딩, 두꺼운 코트, 누빔 옷, 기모, 목도리를 입는 것을 추천해요."
     #습도
     if humidity <= 30:
-        humidity_output = "습도: 습도낮음! 물과보습 필수!"
+        humidity_output = "🧡습도: 습도낮음! 물과보습 필수!"
     elif humidity <= 60:
-        humidity_output = "습도: 습도적당! 쾌적~~"
+        humidity_output = "🧡습도: 습도적당! 쾌적!!"
     elif humidity <= 100:
-        humidity_output ="습도: 습도높음! 불쾌지수업!!"
+        humidity_output ="🧡습도: 습도높음! 불쾌지수 UP!!"
     else:
-        humidity_output = "습도: 자료없음"
+        humidity_output = "🧡습도: 자료없음"
     #바람
     if wind <= 0.3:
-        wind_output = "바람: 바람이 거의안불어요! 앞머리 안날리는날!"
+        wind_output = "💛바람: 바람이 거의안불어요! 앞머리 안날리는날!"
     elif wind <= 1.5:
-        wind_output = "바람: 바람이 조금불어요! 앞머리 지킬수있어요!"
+        wind_output = "💛바람: 바람이 조금불어요! 앞머리 지킬수있어요!"
     elif wind <= 3.3:
-        wind_output = "바람: 조금강한 바람이 불어요.앞머리 주의!!"
+        wind_output = "💛바람: 조금강한 바람이 불어요.앞머리 주의!!"
     elif wind <= 5.4:
-        wind_output = "바람: 강한바람이 불어요! 앞머리주의!!"
+        wind_output = "💛바람: 강한바람이 불어요! 앞머리주의!!"
     else:
-        wind_output = "바람: 태풍인가..!? 외출자제해주세요!!"
+        wind_output = "💛바람: 태풍인가..!? 외출자제해주세요!!"
     #강수량
     if rainfall == 0:
-        rainfall_output = "강수량: 오늘은 비가 안와요!"
+        rainfall_output = "💚강수량: 오늘은 비가 안와요!"
     elif rainfall <= 3.0:
-        rainfall_output = "강수량: 약한 비가 와요! 혹시모르니 우산챙기세요!"
+        rainfall_output = "💚강수량: 약한 비가 와요! 혹시모르니 우산챙기세요!"
     elif rainfall <= 15.0:
-        rainfall_output = "강수량: 우산 꼭 챙기기!!"
+        rainfall_output = "💚강수량: 우산 꼭 챙기기!!"
     elif rainfall < 30.0:
-        rainfall_output = "강수량: 비가많이오네요!! 우산 꼭 챙기기!!"
+        rainfall_output = "💚강수량: 비가많이오네요!! 우산 꼭 챙기기!!"
     elif rainfall >= 30.0:
-        rainfall_output = "강수량: 비가 너무많이와요!! 우산과 샌들은 필수!!"
+        rainfall_output = "💚강수량: 비가 너무많이와요!! 우산과 샌들은 필수!!"
     else:
-        rainfall_output = "자료없음"
+        rainfall_output = "💚강수량: 자료없음"
     #미세먼지
     if dust <=30:
-        dust_output =  "미세먼지: 미세먼지 좋음!"
+        dust_output =  "💙미세먼지: 좋음!"
     elif dust <= 80:
-        dust_output =  "미세먼지: 미세먼지 보통!"
+        dust_output =  "💙미세먼지: 보통!"
     elif dust <= 150:
-        dust_output =  "미세먼지: 미세먼지 나쁨! 외출주의"
+        dust_output =  "💙미세먼지: 나쁨! 외출주의"
     elif dust > 150:
-        dust_output =  "미세먼지: 미세먼지 매우나쁨 KF94필수.."
+        dust_output =  "💙미세먼지: 매우나쁨 KF94필수.."
     else:
-        dust_output =  "자료없음"
+        dust_output =  "💙미세먼지: 자료없음"
     #초미세먼지
     if ultraDust <= 15:
-        ultraDust_output = "초미세먼지 좋음! 오랜만에 이런날씨가"
+        ultraDust_output = "💜초미세먼지: 좋음! "
     elif ultraDust <= 35:
-        ultraDust_output = "초미세먼지 보통! 피크닉하기에 좋은날!!"
+        ultraDust_output = "💜초미세먼지: 보통! 피크닉하기에 좋은날!!"
     elif ultraDust <= 75:
-        ultraDust_output = "초미세먼지 나쁨! 마스크 꼭 착용!"
+        ultraDust_output = "💜초미세먼지: 나쁨! 마스크 꼭 착용!"
     elif ultraDust > 75:
-        ultraDust_output = "초미세먼지 매우 나쁨! 창문닫고외출하시고 마스크 꼭 착용!!"
+        ultraDust_output = "💜초미세먼지: 매우 나쁨! 창문닫고외출하시고 마스크 꼭 착용!!"
     else:
-        ultraDust_output = "자료없음"
-    output = [temp_output, humidity_output, wind_output, rainfall_output, ultraDust_output, dust_output]
+        ultraDust_output = "💜초미세먼지: 자료없음"
+    output = [temp_output, humidity_output, wind_output, rainfall_output, dust_output,ultraDust_output]
     #한칸씩 띄어주기위한코드
     output_str = "\n".join(output)
     return output_str
-browser.quit()
-# UI파일 연결
-form_class = uic.loadUiType("UIdesign.ui")[0]
+browser.quit() 
 
-# 화면을 띄우는데 사용되는 Class 선언
-class WindowClass(QMainWindow, form_class):
-    def __init__(self):
-        super().__init__()
-        self.setupUi(self)
+data = {
+    'area': area,
+    'realTime':realTime,
+    'temp_diff':temp_diff,
+    'temp': temp,
+    'maxTemp': maxTemp,
+    'minTemp': minTemp,
+    'actualTemp': actualTemp,
+    'temp_diff': temp_diff,
+    'humidity': humidity,
+    'wind': wind,
+    'rainfall': rainfall,
+    'ultraDust': ultraDust,
+    'dust': dust,
+}
 
-        #폰트---------------------
-        font = QFont('Arial', 12)
-        font.setBold(True)
-        self.area_data.setFont(font)
-        self.temp_diff_data.setFont(font)
-        self.currentTemp.setFont(font)
-        self.maxTemp.setFont(font)
-        self.minTemp.setFont(font)
-        self.actTemp.setFont(font)
-        self.fhumidity_data.setFont(font)
-        self.fhumidity_comm.setFont(font)
-        self.wind_data.setFont(font)
-        self.wind_comm.setFont(font)
-        self.rain_data.setFont(font)
-        self.rain_comm.setFont(font)
-        self.dust_data.setFont(font)
-        self.dust_comm.setFont(font)
-        self.udust_data.setFont(font)
-        self.udust_comm.setFont(font)
-        font2 = QFont('Arial',10)
-        font2.setBold(True)
-        self.dress_comm.setFont(font2)
-        
+output_str = totalWeather(data['temp'], data['humidity'], data['wind'], data['rainfall'], data['dust'], data['ultraDust'])
+css_file="./main.css"
+html_template = '''
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- CSS only -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+	<link rel="stylesheet" href="main.css">
+	<title>Weather</title>
 
-        #이미지부분----------------
-        #지역명
-        self.area_data = self.findChild(QLabel, "area_data")
-        self.area_data.setText(area)
+</head>
+<body>
+	<div>
+		<h1>
+			<span class="material-icons">nights_stay</span>
+			오늘의 날씨 정보
+			<span class="material-icons" style="margin-left: 8px">nights_stay</span>
+		</h1>
 
-        #어제보다 몇도높은지부분
-        self.temp_diff_data = self.findChild(QLabel, "temp_diff_data")
-        self.temp_diff_data.setText(temp_diff)
-        #현재온도
-        self.currentTemp = self.findChild(QLabel, "currentTemp")
-        self.currentTemp.setText(str(temp))
-        #체감온도
-        self.actTemp = self.findChild(QLabel, "actTemp")
-        self.actTemp.setText(actualTemp)
-        #최고온도
-        self.maxTemp = self.findChild(QLabel, "maxTemp")
-        self.maxTemp.setText(maxTemp)
-        #최저온도
-        self.minTemp = self.findChild(QLabel, "minTemp")
-        self.minTemp.setText(fMinTemp(minTemp))
+	</div>
+	<div class="data container">
+		<div class="databox container">
+			<div class="totalWeather container">
+                <h1 style="margin:0">총평</h1>
+                <pre class="totalText"><p>{output_str}</p></pre>
+            </div>
+            <div class="row">
+				<div class="col-12">
+					<div class="card">
+						<h2>지역: {area}</h2>
+                        <h4>{realTime}</h4><br>
+						<h2>{temp_diff}</h2><br>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-3">
+					<div class="card">
+						<span class="material-icons">thermostat</span>
+						<h3>현재기온</h3>
+						<p class="temp">{temp}℃</p>
+					</div>
+				</div>
+				<div class="col-3">
+					<div class="card">
+						<span class="material-icons">self_improvement</span>
+						<h3>체감온도</h3>
+						<p class="actualTemp">{actualTemp}</p>
+					</div>
+				</div>
+				<div class="col-3">
+					<div class="card">
+						<span class="material-icons">south</span>
+						<h3>최저온도</h3>
+						<p class="minTemp">{minTemp}</p>
+					</div>
+				</div>
+				<div class="col-3">
+					<div class="card">
+						<span class="material-icons">north</span>
+						<h3>최고온도</h3>
+						<p class="maxTemp">{maxTemp}</p>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-4">
+					<div class="card ">
+						<span class="material-icons">
+							thunderstorm
+						</span>
+						<h3>강수량</h3>
+						<p class="rainfall">{rainfall}mm</p>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="card ">
+						<span class="material-icons">
+							water_drop
+						</span>
+						<h3>습도</h3>
+						<p class="humidity">{humidity}</p>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="card">
+						<span class="material-icons">
+							air
+						</span>
+						<h3>바람</h3>
+						<p class="wind">{wind}m/s</p>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-4">
+					<div class="card ">
+						<span class="material-icons">
+							masks
+						</span>
+						<h3>미세먼지</h3>
+						<p class="dust">{dust}㎍/m³</p>
+					</div>
+				</div>
+				<div class="col-4">
+					<span id="cloud" class="material-icons">wb_sunny</span>
+				</div>
+				<div class="col-4">
+					<div class="card ">
+						<span class="material-icons" style="color: red;">
+							masks
+						</span>
+						<h3>초미세먼지</h3>
+						<p class="ultraDust">{ultraDust}㎍/m³</p>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        #습도------------------------------------
-        self.image_data2 = self.findChild(QLabel, "label_2")
-        self.image_data2.setPixmap(QPixmap(fHumidity(humidity)[1]))
-        #습도데이터
-        self.fhumidity_data = self.findChild(QLabel, "fhumidity_data")
-        self.fhumidity_data.setText(str(humidity))
-        #습도멘트
-        self.fhumidity_comm = self.findChild(QLabel, "fhumidity_comm")
-        self.fhumidity_comm.setText(fHumidity(humidity)[0])
+	</div>
+	<p class="copyright">Copyright 2023. DongYang Univ, Project Team <b>tmp</b> all rights reserved.</p>
+</body>
 
-        #바람------------------------------------
-        self.image_data3 = self.findChild(QLabel, "label_3")
-        self.image_data3.setPixmap(QPixmap(fWind(wind)[1]))
-        #바람데이터
-        self.wind_data = self.findChild(QLabel, "wind_data")
-        self.wind_data.setText(str(wind))
-        #바람멘트
-        self.wind_comm = self.findChild(QLabel, "wind_comm")
-        self.wind_comm.setText(fWind(wind)[0])
+</html> 
+'''
 
-        #강수량------------------------------------
-        self.image_data5 = self.findChild(QLabel, "label_5")
-        self.image_data5.setPixmap(QPixmap(fRainfall(rainfall)[1]))
-        #강수량
-        self.rain_data = self.findChild(QLabel, "rain_data")
-        self.rain_data.setText(str(rainfall))
-        #강수량멘트
-        self.rain_comm = self.findChild(QLabel, "rain_comm")
-        self.rain_comm.setText(fRainfall(rainfall)[0])
+# 데이터를 HTML 템플릿에 적용
+html_output = html_template.format(
+    area=data['area'],
+    realTime=data['realTime'],
+    temp_diff=data['temp_diff'],
+    temp=data['temp'],
+    actualTemp=data['actualTemp'],
+    minTemp=data['minTemp'],
+    maxTemp=data['maxTemp'],
+    rainfall=data['rainfall'],
+    humidity=data['humidity'],
+    wind=data['wind'],
+    dust=data['dust'],
+    ultraDust=data['ultraDust'],
+    output_str=output_str,
+    css_file="./main.css"
+)
 
-        #미세먼지------------------------------------
-        self.image_data7 = self.findChild(QLabel, "label_7")
-        self.image_data7.setPixmap(QPixmap(fDust(dust)[1]))
-        #미세먼지데이터
-        self.dust_data = self.findChild(QLabel, "dust_data")
-        self.dust_data.setText(str(dust))
-        #미세먼지멘트
-        self.dust_comm = self.findChild(QLabel, "dust_comm")
-        self.dust_comm.setText(fDust(dust)[0])
+# HTML 파일로 저장
+with open('weather.html', 'w', encoding='utf-8') as f:
+    f.write(html_output)
 
-        #초미세먼지------------------------------------
-        self.image_data6 = self.findChild(QLabel, "label_6")
-        self.image_data6.setPixmap(QPixmap(fUltra(ultraDust)[1]))
-        #초미세먼지데이터
-        self.udust_data = self.findChild(QLabel, "udust_data")
-        self.udust_data.setText(str(ultraDust))
-        #초미세먼지멘트
-        self.udust_comm = self.findChild(QLabel, "udust_comm")
-        self.udust_comm.setText(fUltra(ultraDust)[0])
-
-        #총데이터
-        self.dress_comm = self.findChild(QLabel, "dress_comm")
-        self.dress_comm.setText(totalWeather(temp,humidity,wind,rainfall,dust,ultraDust))
-    
-
-if __name__ == "__main__":
-    # QApplication : 프로그램을 실행시켜주는 클래스
-    app = QApplication(sys.argv)
-
-    # WindowClass의 인스턴스 생성
-    myWindow = WindowClass()
-
-    # 프로그램 화면을 보여주는 코드
-    myWindow.show()
-
-    # 프로그램을 이벤트루프로 진입시키는(프로그램을 작동시키는) 코드
-    app.exec_()
+webbrowser.open('weather.html')

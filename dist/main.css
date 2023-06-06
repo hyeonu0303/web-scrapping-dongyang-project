@@ -1,0 +1,120 @@
+@font-face {
+  font-family: 'omyu_pretty';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://example.com/MaterialIcons-Regular.eot);
+  /* For IE6-8 */
+  src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(https://example.com/MaterialIcons-Regular.woff2) format('woff2'),
+    url(https://example.com/MaterialIcons-Regular.woff) format('woff'),
+    url(https://example.com/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+body {
+  font-family: 'omyu_pretty', Arial, sans-serif;
+  font-size: x-large;
+  margin: 60px;
+}
+
+h1 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 60px;
+  font-weight: bolder;
+}
+
+
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 32px;
+  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+.data {
+  background-color: rgb(180, 237, 250);
+  border-radius: 30px;
+  padding: 30px;
+  box-shadow: 0 0 10px rgb(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.totalWeather {
+  
+  background-color: white;
+  border-radius: 40px;
+  padding-bottom: 20px;
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 10px rgb(0, 0, 0, 0.5);
+  font-size: 25px;
+}
+
+.title {
+  background-color: rgb(255, 255, 255);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.card {
+  margin-bottom: 30px;
+  text-align: center;
+  padding-top: 20px;
+
+  box-shadow: 0 0 10px rgb(0, 0, 0, 0.5);
+  border-radius: 30px;
+}
+
+h3 {
+  margin-top: 10px;
+}
+
+#cloud {
+  font-size: 100px;
+  margin-top: 20px;
+}
+
+.copyright {
+  text-align: center;
+  margin-top: 30px;
+  color: rgb(72, 72, 72);
+}
+
+.totalText {
+  font-family: 'omyu_pretty', Arial, sans-serif;
+  margin: auto;
+  text-align: left; /* Align the text to the left */
+  font-size: 30px;
+  display: flex; /* Use flexbox for vertical alignment */
+  align-items: flex-start; /* Align text to the top */
+  justify-content: center; /* Align the element in the center horizontally */
+}
